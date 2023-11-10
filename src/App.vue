@@ -1,0 +1,19 @@
+<script setup>
+import { RouterView } from 'vue-router';
+import HeaderPage from './components/HeaderPage.vue';
+import FooterPage from './components/FooterPage.vue';
+</script>
+
+
+<template>
+  <HeaderPage />
+  <main class="main">
+    <RouterView />
+  </main>
+  <FooterPage />
+</template>
+
+
+<style scoped>
+
+</style>
