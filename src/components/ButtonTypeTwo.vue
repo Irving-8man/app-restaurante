@@ -1,66 +1,90 @@
+<script setup>
+import { RouterLink } from 'vue-router'
+const props = defineProps(['titulo', 'enlace'])
+
+</script>
 <template>
-    <button href="#" class="hbtn hb-border-bottom-br3 hpill">Detail Bottom</button>
+    <span>
+        <RouterLink :to="props.enlace" class="hbtn hb-fill-middle2-bg hpill hbor3">{{ props.titulo }} </RouterLink>
+    </span>
 </template>
 
 <style scoped>
 .hbtn {
     position: relative;
-    box-sizing: border-box;
     display: inline-block;
     overflow: hidden;
     padding: 8px 20px;
     margin: 0px 3px 6px;
     text-align: center;
-    border: 2px solid rgb(255, 255, 255);
     text-decoration: none;
     color: rgb(255, 255, 255);
     white-space: nowrap;
     z-index: 0;
-}
+} 
 
 
 .hbtn i {
     padding-right: 8px;
-}
+} 
 
-
-.hb-border-bottom-br3::after {
-    border-radius: 50px;
-    box-sizing: border-box;
+/**Cierre */
+.hb-fill-middle2-bg::before {
     position: absolute;
-    width: 100%;
-    height: 100%;
     content: "";
-    border: 2px solid rgb(255, 255, 255);
-    z-index: 2;
-    margin: 0px;
-    left: 0px;
-    bottom: 0px;
-    border-top-width: 2px;
-    transition: border-top-width 0.1s ease 0.2s, height 0.2s ease 0.1s, width 0.2s ease 0s, margin 0.2s ease 0s;
-}
-
-
-.hb-border-bottom-br3 {
-    position: relative;
+    background: var(--rojo);
     transition-duration: 0.3s;
-    overflow: visible;
-    box-sizing: border-box;
-    border: none;
-    padding: 10px 22px;
-}
+    z-index: -1;
+    inset: 0px 0px auto auto;
+    width: 0px;
+    height: 100%;
+    opacity: 1;
+} 
 
 
-.hb-border-bottom-br3:hover::after {
-    width: 60%;
-    height: 0px;
-    border-width: 0px 2px 2px;
-    margin: 0px 20%;
-    transition: border-top-width 0.1s ease 0s, height 0.2s ease 0.1s, width 0.2s ease 0.2s, margin 0.2s ease 0.2s;
-}
+.hb-fill-middle2-bg:hover::before {
+    width: 50%;
+    height: 100%;
+    opacity: 1;
+} 
+
+/**Aqui cambia color de texto inicial */
+.hb-fill-middle2-bg {
+    background: var(--amarillo-dorado);
+    color: #333333;
+    transition: all 0.3s ease 0s;
+    box-shadow: 0 0 13px rgba(0, 0, 0, 0.5);
+} 
+
+
+.hb-fill-middle2-bg:hover {
+    color: rgb(255, 255, 255);
+    background: white;
+    transition: all 0.3s ease 0s;
+} 
+
+/**Cierre */
+.hb-fill-middle2-bg::after {
+    position: absolute;
+    content: "";
+    background: var(--rojo);
+    transition-duration: 0.3s;
+    z-index: -1;
+    inset: 0px auto auto 0px;
+    width: 0px;
+    height: 100%;
+    opacity: 1;
+} 
+
+
+.hb-fill-middle2-bg:hover::after {
+    width: 50%;
+} 
 
 
 .hpill {
     border-radius: 50px;
-}
+} 
+
+
 </style>

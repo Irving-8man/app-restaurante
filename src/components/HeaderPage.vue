@@ -58,7 +58,7 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
     color: white;
     display: flex;
     justify-content: space-between;
-    padding: .4375rem .625rem;
+    padding: .4375rem  2.1875rem;
 }
 
 

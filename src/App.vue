@@ -14,6 +14,4 @@ import FooterPage from './components/FooterPage.vue';
 </template>
 
 
-<style scoped>
 
-</style>

@@ -6,25 +6,42 @@
 }
 
 a,
-.green {
+.white {
   text-decoration: none;
   color: white;
   transition: 0.4s;
 }
 
+
+
 .enlace:hover{
   color: var(--amarillo-dorado);
 }
 
-.main,
-main {
-  color: black;
-  margin-top: 80px;
-  width: 90%;
+.icon:hover path {
+  fill: var(--amarillo-dorado); /* Cambia el color de relleno a rojo al hacer hover */
 }
 
 
-@media (min-width: 1024px) {
 
-  #app {}
+.main,
+main {
+  color: black;
+  margin-top: 70px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+strong, .strong{
+  color: var(--rojo)
+}
+
+.section,section {
+  width: 100%;
+  max-width: 1260px;
+  margin-bottom: 50px;
+  min-height: 80vh;
+  padding: 0 20px;
 }
