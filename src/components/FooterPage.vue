@@ -113,6 +113,7 @@ import { RouterLink } from 'vue-router'
 .logoFooter {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .logo {
@@ -144,9 +145,14 @@ import { RouterLink } from 'vue-router'
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
+    margin-top: 4px;
 }
 
 .redes {
     margin-top: 10px;
+}
+
+.tituloPrincipal{
+    text-transform: uppercase;
 }
 </style>

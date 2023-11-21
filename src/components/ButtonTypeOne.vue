@@ -6,25 +6,26 @@ const props = defineProps(['titulo', 'enlace'])
 
 <template>
     <span>
-        <RouterLink :to="props.enlace" class="hbtn hb-fill-middle-bg hpill">{{ props.titulo }} </RouterLink>
+        <RouterLink :to="props.enlace" class="hbtn hb-fill-middle-rev-bg hpill hpad2">{{ props.titulo }} </RouterLink>
     </span>
 </template>
 
 <style scope>
+
 .hbtn {
     position: relative;
     box-sizing: border-box;
     display: inline-block;
     overflow: hidden;
-    padding: 8px 20px;
+    padding: 9px 20px;
     margin: 0px 3px 6px;
     text-align: center;
     border: 2px solid rgb(255, 255, 255);
     text-decoration: none;
-    color: rgb(255, 255, 255);
+    color: white;
     white-space: nowrap;
     z-index: 0;
-    font-weight:600;
+    font-weight: 600;
 }
 
 
@@ -33,52 +34,54 @@ const props = defineProps(['titulo', 'enlace'])
 }
 
 
-.hb-fill-middle-bg::before {
+.hb-fill-middle-rev-bg::before {
     position: absolute;
     content: "";
-    background: rgb(255, 255, 255);
-    transition-duration: 0.3s;
+    background: var(--rojo);
+    transition-duration: 0.2s;
     z-index: -1;
     inset: auto auto 0px 0px;
     width: 100%;
-    height: 0px;
-    opacity: 1;
-}
-
-
-.hb-fill-middle-bg:hover::before {
-    width: 100%;
     height: 50%;
     opacity: 1;
 }
 
 
-.hb-fill-middle-bg:hover {
-    color: rgb(0, 0, 0);
-    background: rgb(255, 255, 255);
-    transition: all 0.3s ease 0s;
+.hb-fill-middle-rev-bg:hover::before {
+    width: 100%;
+    height: 0%;
+    opacity: 1;
 }
 
 
-.hb-fill-middle-bg::after {
+.hb-fill-middle-rev-bg:hover {
+    background: white;
+    color: black;
+    transition: all 0.2s ease 0s;
+}
+
+
+.hb-fill-middle-rev-bg::after {
     position: absolute;
     content: "";
-    background: rgb(255, 255, 255);
-    transition-duration: 0.3s;
+    background: var(--rojo);
+    transition-duration: 0.2s;
     z-index: -1;
     inset: 0px auto auto 0px;
     width: 100%;
-    height: 0px;
+    height: 50%;
     opacity: 1;
 }
 
 
-.hb-fill-middle-bg:hover::after {
-    height: 50%;
+.hb-fill-middle-rev-bg:hover::after {
+    height: 0px;
 }
 
 
 .hpill {
     border-radius: 50px;
 }
+
+
 </style>

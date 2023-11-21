@@ -1,9 +1,63 @@
+<script setup>
+import CardProducto from '../components/CardProducto.vue';
+import productosMenu from '../assets/data/productosMenu.json';
+import ButtonCarrito from '../components/ButtonCarrito.vue';
+const productos = productosMenu;
+let fideos = productos.Fideos;
+let pollos = productos.Pollos;
+let postres = productos.Postres;
+let bebidas = productos.Bebidas;
+
+
+</script>
+
 <template>
   <div class="backTitle">
     <div class="overlay"></div>
     <h2 class="titleSeccion">Menú</h2>
   </div>
+  <div class="secCarrito">
+    <ButtonCarrito style="margin-right:10px;"></ButtonCarrito>
+  </div>
+  <section class="">
+    <div class="platillosCarrito">
+      <h3 class="tituloSecPlatillo">Fideos</h3>
+      <div class="productos">
+        <template v-for="fideo in fideos" :key="fideo.ID">
+          <CardProducto :producto="fideo"></CardProducto>
+        </template>
+
+      </div>
+    </div>
+    <div class="platillosCarrito">
+      <h3 class="tituloSecPlatillo">Pollo</h3>
+      <div class="productos">
+        <template v-for="pollo in pollos" :key="pollo.ID">
+          <CardProducto :producto="pollo"></CardProducto>
+        </template>
+      </div>
+    </div>
+    <div class="platillosCarrito">
+      <h3 class="tituloSecPlatillo">Postres</h3>
+      <div class="productos">
+        <template v-for="postre in postres" :key="postre.ID">
+          <CardProducto :producto="postre"></CardProducto>
+        </template>
+      </div>
+    </div>
+    <div class="platillosCarrito">
+      <h3 class="tituloSecPlatillo">Bebidas</h3>
+      <div class="productos">
+        <template v-for="bebida in bebidas" :key="bebida.ID">
+          <CardProducto :producto="bebida"></CardProducto>
+        </template>
+      </div>
+    </div>
+  </section>
 </template>
+
+
+
 
 <style scoped>
 .backTitle {
@@ -12,7 +66,7 @@
   background-size: cover;
   background-position: center;
   width: 100%;
-  min-height: 260px;
+  min-height: var(--altura-bar-sec);
   padding: 20px;
   box-sizing: border-box;
   display: flex;
@@ -21,6 +75,7 @@
   align-items: center;
   margin-bottom: 40px;
 }
+
 
 .overlay {
   position: absolute;
@@ -36,5 +91,30 @@
   font-size: 4.0625rem;
   font-weight: 600;
   z-index: 3;
+}
+
+.secCarrito {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: end;
+  width: 100%;
+  max-width: 1260px;
+}
+
+.productos {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  flex-flow: row wrap;
+  align-content: center;
+  gap: 30px;
+  margin:40px 0;
+}
+
+.tituloSecPlatillo {
+  font-size: 1.875rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 </style>

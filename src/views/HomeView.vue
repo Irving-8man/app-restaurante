@@ -11,7 +11,7 @@ import Carrousel from '../components/Carrousel.vue';
       <h2 class="heroTitle">
         La mejor <strong>comida</strong><br><strong>china</strong> en México
       </h2>
-      <ButtonTwo enlace="Mesas" titulo="Reserva ahora"></ButtonTwo>
+      <ButtonTwo enlace="mesas" titulo="Reserva ahora"></ButtonTwo>
     </div>
 
     <div class="contentImg">
@@ -66,17 +66,17 @@ import Carrousel from '../components/Carrousel.vue';
 
       <div class="platillo">
         <div class="imgPlatillo">
-          <img src="../assets/img/Fideo2.png" alt="Fideos chinos con camarones" loading="lazy">
+          <img src="../assets/img/Fideo2.png" alt=" Pollo naranja" loading="lazy">
         </div>
-        <span class="nombrePlatillo">Fideos chinos <br> con camarones</span>
+        <span class="nombrePlatillo"> Pollo naranja</span>
       </div>
 
       <div class="platillo">
         <div class="imgPlatillo">
-          <img src="../assets/img/Fideo3.png" alt="Fideos chinos con langostinos y mango" class="imgplatillo"
+          <img src="../assets/img/Fideo3.png" alt="Pollo con patata" class="imgplatillo"
             loading="lazy">
         </div>
-        <span class="nombrePlatillo">Fideos chinos con <br>langostinos y mango</span>
+        <span class="nombrePlatillo"> Pollo con patata</span>
       </div>
     </div>
   </section>
@@ -111,11 +111,11 @@ import Carrousel from '../components/Carrousel.vue';
     </div>
     <!--Boton-->
     <div class="contentBoton">
-      <ButtonTwo enlace="Menu" titulo="Ir a Menú"></ButtonTwo>
+      <ButtonTwo enlace="menu" titulo="Ir a Menú"></ButtonTwo>
     </div>
   </section>
   <!---->
-  <div class="separacion"></div>
+  <div class="separacion"><div class="overlay"></div></div>
   <!---->
   <section class="section contentHistoria">
     <div class="contentHist">
@@ -156,6 +156,10 @@ import Carrousel from '../components/Carrousel.vue';
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid rgb(223, 222, 222);
+  border-radius: 30px;
+  margin-top:20px;
+  padding:30px;
 }
 
 .ContentHeroTitle {
@@ -194,6 +198,7 @@ import Carrousel from '../components/Carrousel.vue';
 }
 
 .separacion {
+  position: relative;
   background-image: url('../assets/img/imgSeccion.webp');
   background-size: cover;
   background-position: bottom;
@@ -201,7 +206,17 @@ import Carrousel from '../components/Carrousel.vue';
   min-height: 400px;
   padding: 20px;
   box-sizing: border-box;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+.overlay {
+  border-radius: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .contentBoton {
@@ -231,6 +246,7 @@ import Carrousel from '../components/Carrousel.vue';
   grid-column: 1/-1;
   grid-row: 1/-1;
   z-index: 0;
+  border-radius: 30px;
 }
 
 .contentHist {
@@ -261,5 +277,9 @@ import Carrousel from '../components/Carrousel.vue';
 
 .imgClientes,.imgTia{
   width: 80%;
+}
+
+.nombrePlatillo{
+  text-wrap:balance;
 }
 </style>

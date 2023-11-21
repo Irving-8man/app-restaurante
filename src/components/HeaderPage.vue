@@ -48,7 +48,7 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
 
 <style scoped>
 .header {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
@@ -59,6 +59,7 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
     display: flex;
     justify-content: space-between;
     padding: .4375rem  2.1875rem;
+    border-bottom: 1px solid white;
 }
 
 
@@ -75,6 +76,7 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
 }
 
 .ingresar {
+    margin-top:10px;
 }
 
 .titulo {
@@ -89,7 +91,7 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
 }
 
 .pagina>a {
-    font-weight: 100;
+    font-weight: 300;
 }
 
 .contentPrincipal {

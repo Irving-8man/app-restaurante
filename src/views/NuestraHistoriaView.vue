@@ -58,7 +58,7 @@
     background-size: cover;
     background-position: center;
     width: 100%;
-    min-height: 260px;
+    min-height: var(--altura-bar-sec);
     padding: 20px;
     box-sizing: border-box;
     display: flex;

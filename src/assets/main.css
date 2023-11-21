@@ -27,7 +27,6 @@ a,
 .main,
 main {
   color: black;
-  margin-top: 70px;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
