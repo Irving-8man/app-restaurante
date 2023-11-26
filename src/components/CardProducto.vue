@@ -56,5 +56,6 @@ let costo = 100;
     padding: .5625rem;
     border-radius: 1.875rem;
     box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.25);
+    max-height: 160px;
 }
 </style>

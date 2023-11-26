@@ -8,7 +8,11 @@ import FooterPage from './components/FooterPage.vue';
 <template>
   <HeaderPage />
   <main class="main">
-    <RouterView />
+    <router-view v-slot="{ Component }">
+      <transition name="fade">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </main>
   <FooterPage />
 </template>

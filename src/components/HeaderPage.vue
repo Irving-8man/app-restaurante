@@ -40,7 +40,7 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
         </div>
 
         <div class="ingresar">
-            <ButtonTypeOne titulo="Acceder" enlace="/nuestraHistoria"></ButtonTypeOne>
+            <ButtonTypeOne enlace="/nuestraHistoria">Acceder</ButtonTypeOne>
         </div>
     </header>
 </template>

@@ -6,7 +6,9 @@ const props = defineProps(['titulo', 'enlace'])
 
 <template>
     <span>
-        <RouterLink :to="props.enlace" class="hbtn hb-fill-middle-rev-bg hpill hpad2">{{ props.titulo }} </RouterLink>
+        <RouterLink :to="props.enlace" class="hbtn hb-fill-middle-rev-bg hpill hpad2">
+        <slot></slot>
+        </RouterLink>
     </span>
 </template>
 

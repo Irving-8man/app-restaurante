@@ -1,7 +1,10 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import CardReservacion from '../components/CardReservacion.vue';
+import mesasRestaurante from '../assets/data/mesasRestaurante.json';
+import Login from '../components/Login.vue';
 
+const mesas = mesasRestaurante;
 const segundos = ref(0);
 const HORA_ENTRADA = '1:00 p.m.';
 const HORA_SALIDA = '11:00 p.m.'
@@ -72,8 +75,9 @@ onMounted(() => {
 <template>
     <div class="backTitle">
         <h2 class="titleSeccion">Encuentra tu mesa para la ocasión</h2>
+
         <form class="busqueda">
-            <input type="date" id="fecha" name="fecha" min="2023-11-25" class="input">
+            <input type="date" id="fecha" name="fecha" min="2023-11-25" class="input" value="2023-11-25">
 
             <select name="" id="" class="input">
                 <option disabled value="">Selecciona uno</option>
@@ -95,13 +99,11 @@ onMounted(() => {
     <div class="contentTitulo">
         <h3 class="tituloDisponible">Disponibles</h3>
     </div>
-
     <section class="section">
         <div class="reservaciones">
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
-            
         </div>
     </section>
 </template>
@@ -109,6 +111,9 @@ onMounted(() => {
 
 
 <style scoped>
+
+
+
 .backTitle {
     position: relative;
     background: linear-gradient(180deg, #930911 0%, #930911 12.5%, #000 86.98%, #000 100%);
@@ -118,7 +123,7 @@ onMounted(() => {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: space-around;
     align-items: center;
     margin-bottom: 40px;
 }
@@ -141,9 +146,12 @@ onMounted(() => {
 
 .input {
     background-color: white;
-    border-radius: 5px;
-    width: 150px;
+    border-radius: 2px;
+    width: 200px;
+    height: 30px;
 }
+
+
 
 .contentTitulo {
     width: 100%;
