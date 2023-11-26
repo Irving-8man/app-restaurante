@@ -17,9 +17,9 @@ let bebidas = productos.Bebidas;
     <h2 class="titleSeccion">Menú</h2>
   </div>
   <div class="secCarrito">
-    <ButtonCarrito style="margin-right:10px;"></ButtonCarrito>
+    <ButtonCarrito></ButtonCarrito>
   </div>
-  <section class="">
+  <section>
     <div class="platillosCarrito">
       <h3 class="tituloSecPlatillo">Fideos</h3>
       <div class="productos">
@@ -99,6 +99,7 @@ let bebidas = productos.Bebidas;
   justify-content: end;
   width: 100%;
   max-width: 1260px;
+  margin-right:10px;
 }
 
 .productos {
@@ -107,8 +108,7 @@ let bebidas = productos.Bebidas;
   align-items: start;
   flex-flow: row wrap;
   align-content: center;
-  gap: 30px;
-  margin:40px 0;
+  margin: 40px 0;
 }
 
 .tituloSecPlatillo {

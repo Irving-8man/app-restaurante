@@ -1,12 +1,12 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import CardReservacion from '../components/CardReservacion.vue';
+
 const segundos = ref(0);
 const HORA_ENTRADA = '1:00 p.m.';
 const HORA_SALIDA = '11:00 p.m.'
-
-let paquetePersonas = [];
-
-const horasEstablecidas = [
+const PERSONAS_RESERVA = [1, 2, 3, 4, 5, 6];
+const HORAS_RESERVA = [
     '1:00 p.m.', '1:30 p.m.',
     '2:00 p.m.', '2:30 p.m.',
     '3:00 p.m.', '3:30 p.m.',
@@ -73,16 +73,18 @@ onMounted(() => {
     <div class="backTitle">
         <h2 class="titleSeccion">Encuentra tu mesa para la ocasión</h2>
         <form class="busqueda">
-            <input type="date" name="" id="" class="input">
+            <input type="date" id="fecha" name="fecha" min="2023-11-25" class="input">
+
             <select name="" id="" class="input">
-                <option disabled value="">Please select one</option>
+                <option disabled value="">Selecciona uno</option>
                 <option>A</option>
                 <option>B</option>
                 <option>C</option>
             </select>
 
             <select name="Personas" id="" class="input">
-                <option disabled value=""> P </option>
+                <option disabled value="">Selecciona uno</option>
+                <option value="1"> 1 Persona </option>
             </select>
 
             <button type="button" class="input">Vamos!!</button>
@@ -90,7 +92,18 @@ onMounted(() => {
 
     </div>
 
-    {{ horaActual }}
+    <div class="contentTitulo">
+        <h3 class="tituloDisponible">Disponibles</h3>
+    </div>
+
+    <section class="section">
+        <div class="reservaciones">
+            <CardReservacion></CardReservacion>
+            <CardReservacion></CardReservacion>
+            <CardReservacion></CardReservacion>
+            
+        </div>
+    </section>
 </template>
 
 
@@ -130,5 +143,33 @@ onMounted(() => {
     background-color: white;
     border-radius: 5px;
     width: 150px;
+}
+
+.contentTitulo {
+    width: 100%;
+    max-width: 1260px;
+    padding: 20px;
+    text-align: start;
+    margin-bottom: 20px;
+}
+
+.tituloDisponible {
+    font-size: 1.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+
+/**Seccion del grid */
+.reservaciones {
+    width: 100%;
+    max-width: 1260px;
+    display: grid;
+    grid-template-columns: repeat(2, 450px);
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    gap: 25px;
 }
 </style>

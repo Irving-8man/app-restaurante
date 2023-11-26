@@ -1,27 +1,27 @@
 <script setup>
-import SelectProducto from './SelectProducto.vue';
 const props = defineProps(['producto'])
-let costo = 100;
+
 </script>
 <template>
-    <v-card class="card" width="330">
+    <v-card class="card">
         <div class="contentCard">
+            <v-avatar size="200" rounded="0">
+                <v-img src="src/assets/img/mesas/mesaIndividual_1.jpg" alt="Este"></v-img>
+            </v-avatar>
+
             <div class="contenido">
-                <v-card-title class="productoNombre">
-                    {{ props.producto.Nombre }}
+                <v-card-title class="mesaNombre">
+                    Mesa 1
                 </v-card-title>
 
-                <div class="precio">
-                    <p> <strong>$ {{ props.producto.Costo }} </strong></p>
+                <div class="capacidad">
+                    <p>1 a 2 personas</p>
                 </div>
 
-                <v-card-actions>
-                    <SelectProducto></SelectProducto>
-                </v-card-actions>
+                <div class="horario">
+                    hola
+                </div>
             </div>
-            <v-avatar class="ma-3" size="100" rounded="0">
-                <v-img :src="props.producto.img"></v-img>
-            </v-avatar>
         </div>
     </v-card>
 </template>
@@ -43,18 +43,22 @@ let costo = 100;
     flex-flow: column nowrap;
     justify-content: space-between;
     align-content: center;
-    gap: 5px;
 }
 
-.productoNombre {
+.mesaNombre {
     font-size: 15px;
     text-wrap: balance;
     line-height: 1.4;
 }
 
 .card {
-    padding: .5625rem;
-    border-radius: 1.875rem;
+   
+    border: 2px solid rgba(235, 194, 86, 0.82);
+    background: #FFF;
+    border-radius: 0.625rem;
     box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.25);
+    width: 450px;
+    height: 14.3125rem;
+    padding: 1.25rem;
 }
 </style>
