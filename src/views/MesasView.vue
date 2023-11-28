@@ -64,11 +64,7 @@ watch(fechaAhora, (nuevoValor) => {
 /**
  * !horas
  */
-
-const horaSeleccionada = ref('');
-
-const horasDisponibles = computed(() => {
-    const fechaMostrar = fechaSeleccionada.value;
+function obtenerHorasDisponiblesParaFecha(fechaMostrar) {
     const horaInicio = dayjs(fechaMostrar).set('hour', 13).set('minute', 0); // Hora de inicio a las 13:00
     const horaFin = dayjs(fechaMostrar).set('hour', 22).set('minute', 30); // Última hora a las 22:30
     const intervalo = 30; // Intervalo de 30 minutos
@@ -79,7 +75,7 @@ const horasDisponibles = computed(() => {
         : horaInicio;
 
     // Si la fechaMin ha cambiado, muestra todas las opciones de nuevo
-    if (dayjs(fechaSeleccionada.value).isSame(fechaMin.value, 'day')) {
+    if (dayjs(fechaMostrar).isSame(fechaMin.value, 'day')) {
         horaActualCalculada = horaInicio;
     }
 
@@ -96,17 +92,33 @@ const horasDisponibles = computed(() => {
     }
 
     return horas;
+}
+
+const horasDisponibles = computed(() => {
+    const fechaMostrar = fechaSeleccionada.value;
+    return obtenerHorasDisponiblesParaFecha(fechaMostrar);
 });
+
+watch(fechaSeleccionada, (nuevaFechaSeleccionada) => {
+    const horasDisponiblesParaFecha = obtenerHorasDisponiblesParaFecha(nuevaFechaSeleccionada);
+
+    // Verifica si la horaSeleccionada actual está en las nuevas horas disponibles
+    const horaExistente = horasDisponiblesParaFecha.find(hora => hora.valorISO === horaSeleccionada.value);
+
+    // Si la hora actual no está en las nuevas horas disponibles y hay al menos una hora disponible, establece la primera como predeterminada
+    if (!horaExistente && horasDisponiblesParaFecha.length > 0) {
+        horaSeleccionada.value = horasDisponiblesParaFecha[0].valorISO;
+    }
+});
+
 
 
 /**
  * todo Trabajando el numero de personas
  */
-const PERSONAS_RESERVA = ref(personasReserva);
-const numPersonasSeleccionadas = ref(1);
-
-
-
+const personasReservas = ref(personasReserva);
+const numPersonasSeleccionadas = ref('');
+const horaSeleccionada = ref('');
 
 
 
@@ -116,25 +128,29 @@ const numPersonasSeleccionadas = ref(1);
 <template>
     <div class="backTitle">
         <h2 class="titleSeccion">Encuentra tu mesa para la ocasión</h2>
-        <form class="busqueda">
 
+        <form class="busqueda" @submit.prevent="store.increment">
             <input type="date" id="fecha" name="fecha" class="input" :min="fechaMin" v-model="fechaSeleccionada">
 
             <!--Manejo de las horas-->
-            <select name="Horas" id="horas" class="input" v-model="horaSeleccionada">
-                <option v-for="hora in horasDisponibles" :value="hora.valorISO">
-                    {{ hora.hora }}
-                </option>
-            </select>
+            <div class="contHoras">
+                <select name="Horas" id="horas" class="input" v-model="horaSeleccionada">
+                    <option disabled value="">Hora</option>
+                    <option v-for="hora in horasDisponibles" :value="hora.valorISO">
+                        {{ hora.hora }}
+                    </option>
+                </select>
+            </div>
 
-            <!--Manejo de las personas-->
+            <!--Manejo de numero de personas-->
             <select name="Personas" id="numPersonas" class="input" v-model="numPersonasSeleccionadas">
-                <option v-for="numPersonas in PERSONAS_RESERVA" :value="numPersonas.valor">
+                <option disabled value="">Personas</option>
+                <option v-for="numPersonas in personasReservas" :value="numPersonas.valor">
                     {{ numPersonas.etiqueta }}
                 </option>
             </select>
             <!---->
-            <button type="button" class="input">Vamos!!</button>
+            <button type="submit" class="input">Vamos!!</button>
         </form>
 
     </div>
@@ -149,7 +165,7 @@ const numPersonasSeleccionadas = ref(1);
             <CardReservacion></CardReservacion>
             <button type="button" @click="store.increment()">Incrementar</button>
             <div>
-
+                {{ store.count }}
             </div>
         </div>
     </section>
@@ -162,7 +178,7 @@ const numPersonasSeleccionadas = ref(1);
     position: relative;
     background: linear-gradient(180deg, #930911 0%, #930911 12.5%, #000 86.98%, #000 100%);
     width: 100%;
-    min-height: 300px;
+    min-height: var(--altura-bar-sec);
     padding: 20px;
     box-sizing: border-box;
     display: flex;
@@ -194,7 +210,6 @@ const numPersonasSeleccionadas = ref(1);
     width: 200px;
     height: 30px;
 }
-
 
 
 .contentTitulo {
