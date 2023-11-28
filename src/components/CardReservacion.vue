@@ -52,6 +52,8 @@ const props = defineProps(['producto'])
     font-size: 15px;
     text-wrap: balance;
     line-height: 1.4;
+    word-wrap: break-word;
+    white-space:normal;
 }
 
 .card {

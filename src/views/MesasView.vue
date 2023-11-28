@@ -1,72 +1,113 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import CardReservacion from '../components/CardReservacion.vue';
 import mesasRestaurante from '../assets/data/mesasRestaurante.json';
-import Login from '../components/Login.vue';
+import personasReserva from '../assets/data/personasReserva.json';
+import { useCounterStore } from '@/stores/counter';
+import dayjs from 'dayjs';
 
+//? Datos para 
+const store = useCounterStore();
 const mesas = mesasRestaurante;
-const segundos = ref(0);
-const HORA_ENTRADA = '1:00 p.m.';
-const HORA_SALIDA = '11:00 p.m.'
-const PERSONAS_RESERVA = [1, 2, 3, 4, 5, 6];
-const HORAS_RESERVA = [
-    '1:00 p.m.', '1:30 p.m.',
-    '2:00 p.m.', '2:30 p.m.',
-    '3:00 p.m.', '3:30 p.m.',
-    '4:00 p.m.', '4:30 p.m.',
-    '5:00 p.m.', '5:30 p.m.',
-    '6:00 p.m.', '6:30 p.m.',
-    '7:00 p.m.', '7:30 p.m.',
-    '8:00 p.m.', '8:30 p.m.',
-    '9:00 p.m.', '9:30 p.m.',
-    '10:00 p.m.', '10:30 p.m.',
-    '11:00 p.m.'
-];
 
 
-const formatearNumero = (numero) => {
-    return numero < 10 ? `0${numero}` : numero;
-};
+/**
+ * todo Logica de las horas y fecha
+ * !fechas
+ */
 
-const obtenerHoraActual = () => {
-    const fechaActual = new Date();
-    let horas = fechaActual.getHours();
-    let minutos = fechaActual.getMinutes();
-    let segundosFormateados = segundos.value;
+const fechaCompletaAhora = ref(dayjs());
 
-    // Ajustar los minutos y segundos si superan 60
-    if (segundosFormateados >= 60) {
-        minutos += Math.floor(segundosFormateados / 60);
-        segundosFormateados %= 60;
-    }
-
-    if (minutos >= 60) {
-        horas += Math.floor(minutos / 60);
-        minutos %= 60;
-    }
-
-    return `${formatearNumero(horas)}:${formatearNumero(minutos)}:${formatearNumero(segundosFormateados)}`;
-};
-
-const horaActual = ref(obtenerHoraActual());
-
-const actualizarSegundos = () => {
-    segundos.value += 1;
-    horaActual.value = obtenerHoraActual();
-};
-
-// Actualiza los segundos cada segundo
-const intervalId = setInterval(actualizarSegundos, 1000);
-
-// Limpia el temporizador cuando el componente se desmonta
-onBeforeUnmount(() => {
-    clearInterval(intervalId);
-});
-
-// Llama a la función una vez para mostrar la hora inicial
 onMounted(() => {
-    actualizarSegundos();
+    const intervalo = setInterval(() => {
+        fechaCompletaAhora.value = dayjs();
+    }, 1000);
+
+    onUnmounted(() => clearInterval(intervalo));
 });
+
+// Método computado para obtener la fecha actual
+const fechaAhora = computed(() => {
+    return fechaCompletaAhora.value.format('YYYY-MM-DD');
+});
+
+//Fecha seleccionada
+const fechaSeleccionada = ref(fechaAhora.value);
+
+// Variable computada para la fecha mínima
+const fechaMin = computed(() => {
+    const horaFin = dayjs(fechaAhora.value).set('hour', 22).set('minute', 30);
+
+    // Si la hora actual ha pasado la horaFin, devuelve la fecha para el siguiente día
+    if (dayjs().isAfter(horaFin)) {
+        return dayjs(fechaAhora.value).add(1, 'day').format('YYYY-MM-DD');
+    } else {
+        return fechaAhora.value;
+    }
+});
+
+
+watch(fechaAhora, (nuevoValor) => {
+    const horaFin = dayjs(nuevoValor).set('hour', 22).set('minute', 30);
+    // Si la hora actual ha pasado la horaFin, actualiza fechaMin directamente
+    if (dayjs().isAfter(horaFin)) {
+        fechaMin.value = dayjs(nuevoValor).add(1, 'day').format('YYYY-MM-DD');
+    }
+
+    // Si fechaSeleccionada está en el día que pasamos, ajusta automáticamente
+    if (dayjs(fechaSeleccionada.value).isSame(horaFin, 'day')) {
+        fechaSeleccionada.value = fechaMin.value;
+    }
+});
+
+
+/**
+ * !horas
+ */
+
+const horaSeleccionada = ref('');
+
+const horasDisponibles = computed(() => {
+    const fechaMostrar = fechaSeleccionada.value;
+    const horaInicio = dayjs(fechaMostrar).set('hour', 13).set('minute', 0); // Hora de inicio a las 13:00
+    const horaFin = dayjs(fechaMostrar).set('hour', 22).set('minute', 30); // Última hora a las 22:30
+    const intervalo = 30; // Intervalo de 30 minutos
+
+    // Determina el inicio de las horas disponibles
+    let horaActualCalculada = dayjs(fechaMostrar).isSame(dayjs(), 'day')
+        ? fechaCompletaAhora.value.add(intervalo - (fechaCompletaAhora.value.minute() % intervalo), 'minute')
+        : horaInicio;
+
+    // Si la fechaMin ha cambiado, muestra todas las opciones de nuevo
+    if (dayjs(fechaSeleccionada.value).isSame(fechaMin.value, 'day')) {
+        horaActualCalculada = horaInicio;
+    }
+
+    const horas = [];
+
+    while (horaActualCalculada.isBefore(horaFin) || horaActualCalculada.isSame(horaFin)) {
+        // Verifica si la hora actual calculada está después de la hora actual
+        if (horaActualCalculada.isAfter(fechaCompletaAhora.value)) {
+            const horaFormateada = horaActualCalculada.format('HH:mm');
+            const valorISO = horaActualCalculada.format('YYYY-MM-DDTHH:mm:ss');
+            horas.push({ hora: horaFormateada, valorISO: valorISO });
+        }
+        horaActualCalculada = horaActualCalculada.add(intervalo, 'minute');
+    }
+
+    return horas;
+});
+
+
+/**
+ * todo Trabajando el numero de personas
+ */
+const PERSONAS_RESERVA = ref(personasReserva);
+const numPersonasSeleccionadas = ref(1);
+
+
+
+
 
 
 </script>
@@ -75,22 +116,24 @@ onMounted(() => {
 <template>
     <div class="backTitle">
         <h2 class="titleSeccion">Encuentra tu mesa para la ocasión</h2>
-
         <form class="busqueda">
-            <input type="date" id="fecha" name="fecha" min="2023-11-25" class="input" value="2023-11-25">
 
-            <select name="" id="" class="input">
-                <option disabled value="">Selecciona uno</option>
-                <option>A</option>
-                <option>B</option>
-                <option>C</option>
+            <input type="date" id="fecha" name="fecha" class="input" :min="fechaMin" v-model="fechaSeleccionada">
+
+            <!--Manejo de las horas-->
+            <select name="Horas" id="horas" class="input" v-model="horaSeleccionada">
+                <option v-for="hora in horasDisponibles" :value="hora.valorISO">
+                    {{ hora.hora }}
+                </option>
             </select>
 
-            <select name="Personas" id="" class="input">
-                <option disabled value="">Selecciona uno</option>
-                <option value="1"> 1 Persona </option>
+            <!--Manejo de las personas-->
+            <select name="Personas" id="numPersonas" class="input" v-model="numPersonasSeleccionadas">
+                <option v-for="numPersonas in PERSONAS_RESERVA" :value="numPersonas.valor">
+                    {{ numPersonas.etiqueta }}
+                </option>
             </select>
-
+            <!---->
             <button type="button" class="input">Vamos!!</button>
         </form>
 
@@ -104,6 +147,10 @@ onMounted(() => {
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
+            <button type="button" @click="store.increment()">Incrementar</button>
+            <div>
+
+            </div>
         </div>
     </section>
 </template>
@@ -111,9 +158,6 @@ onMounted(() => {
 
 
 <style scoped>
-
-
-
 .backTitle {
     position: relative;
     background: linear-gradient(180deg, #930911 0%, #930911 12.5%, #000 86.98%, #000 100%);

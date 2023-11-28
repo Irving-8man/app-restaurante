@@ -4,7 +4,7 @@ const props = defineProps(['producto'])
 let costo = 100;
 </script>
 <template>
-    <v-card class="card" width="330">
+    <v-card class="card">
         <div class="contentCard">
             <div class="contenido">
                 <v-card-title class="productoNombre">
@@ -43,12 +43,14 @@ let costo = 100;
     flex-flow: column nowrap;
     justify-content: space-between;
     align-content: center;
+    min-height: 80px;
     gap: 5px;
 }
 
 .productoNombre {
     font-size: 15px;
-    text-wrap: balance;
+    word-wrap: break-word;
+    white-space:normal;
     line-height: 1.4;
 }
 
@@ -56,6 +58,8 @@ let costo = 100;
     padding: .5625rem;
     border-radius: 1.875rem;
     box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.25);
-    max-height: 160px;
+    max-height: 180px;
+    width: 330px;
+    max-width: 330px;
 }
 </style>
