@@ -11,8 +11,8 @@
   --vt-c-black-mute: #282828;
 
   
-  --rojo: #930911;
-  --amarillo-dorado:#ffc823;
+  --rojo: rgb(219, 41, 41);
+  --amarillo-dorado:#FFD814;
   --altura-bar-sec: 240px;
 
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);

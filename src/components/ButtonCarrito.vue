@@ -1,6 +1,6 @@
 <template>
-    <v-badge :content="unidades">
-        <button class="buton">
+    <v-badge :content="este.totalUnidades">
+        <button class="buton" @click="carrito.limpiarStorage">
             <div class="contentIcon">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512" fill="#ffffff">
@@ -16,7 +16,15 @@
     </v-badge>
 </template>
 <script setup>
-let unidades = 0;
+import { useCarritoStore } from '@/stores/carrito';
+import { useEsteStore } from '@/stores/este';
+
+const carrito = useCarritoStore();
+const este = useEsteStore();
+
+
+
+
 
 </script>
 <style scoped>

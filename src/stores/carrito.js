@@ -1,26 +1,59 @@
-import { ref, computed , reactive} from "vue";
+import { ref, computed, reactive } from "vue";
 import { defineStore } from "pinia";
-
+import { useStorage } from "@vueuse/core";
 
 export const useCarritoStore = defineStore("carrito", () => {
   //* Pagos
-  const costoTotal = ref(0);
-  const costoParcial = ref(0);
-  const carrito = reactive([])
+  const carrito = useStorage("mi-carrito", []);
+  const costoTotal = useStorage("costo-total", 0);
+  const unidadesTotales = useStorage("unidadesTotales", 0);
 
-
-  const doubleCount = computed(() => count.value * 2);
 
   /**
-   * ! CRUD basico
+   * ? CRUD de productos
    */
 
-  //Agregar la primera vez producto con unidades
-  function agregarProducto( producto, unidades){
-      let subTotal = producto.costo;
+  //!Agregar producto
+  function agregarProducto(producto) {
+    let indice = carrito.value.findIndex((p) => p.ID === producto.ID);
+    let noDisponible = -1;
+
+    if (indice !== noDisponible) {
+      carrito.value[indice].Unidades = producto.Unidades;
+      carrito.value[indice].CostoParcial = producto.CostoParcial;
+    } else {
+      carrito.value.push(producto);
+    }
   }
 
-  //
+  //!eliminar producto
+  function eliminarProducto(ID) {
+    const indice = carrito.value.findIndex((item) => item.ID === ID);
+    if (indice !== -1) {
+      carrito.value.splice(indice, 1);
+    }
+  }
 
-  return { count, doubleCount, increment };
+  //! Buscar unidades por ID
+  function buscarUnidadesPorId(ID) {
+    const producto = carrito.value.find((p) => p.ID === ID);
+    return producto ? producto.Unidades : 0;
+  }
+
+
+  //!Limpiar el storage
+  function limpiarStorage() {
+    carrito.value = [];
+    costoTotal.value = 0;
+    location.reload();
+  }
+
+  return {
+    carrito,
+    agregarProducto,
+    eliminarProducto,
+    buscarUnidadesPorId,
+    limpiarStorage,
+    costoTotal,
+  };
 });

@@ -172,7 +172,7 @@ const horaSeleccionada = ref('');
 <style scoped>
 .backTitle {
     position: relative;
-    background: linear-gradient(180deg, #930911 0%, #930911 12.5%, #000 86.98%, #000 100%);
+    background: linear-gradient(180deg, var(--rojo) 0%, var(--rojo) 12.5%, #000 86.98%, #000 100%);
     width: 100%;
     min-height: var(--altura-bar-sec);
     padding: 20px;
