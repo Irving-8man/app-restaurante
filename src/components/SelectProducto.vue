@@ -1,6 +1,6 @@
 <template>
     <div class="controles">
-        <button class="botonControl">
+        <button class="botonControl" @click="eliminarUnidad">
             <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="#00000">
                 <path
                     d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
@@ -11,7 +11,7 @@
                 {{ unidades }}
             </p>
         </div>
-        <button class="botonControl">
+        <button class="botonControl" @click="agregarUnidad">
             <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="#00000">
                 <path
                     d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
@@ -20,7 +20,30 @@
     </div>
 </template>
 <script setup>
-let unidades = 0;
+import { ref } from 'vue';
+const emit = defineEmits(['unidades']);
+
+/**
+ * ! Unidades del producto
+ */
+const LIMITE_BAJO = 0;
+const LIMITE_ALTO = 30;
+const unidades = ref(0);
+
+function agregarUnidad() {
+    if (unidades.value < LIMITE_ALTO) {
+        unidades.value++;
+        emit('unidades', unidades.value);
+    }
+}
+
+function eliminarUnidad() {
+    if (unidades.value > LIMITE_BAJO) {
+        unidades.value--;
+        emit('unidades', unidades.value);
+    }
+}
+
 </script>
 <style scoped>
 .controles {

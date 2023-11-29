@@ -1,10 +1,28 @@
 <script setup>
+import { ref } from 'vue';
 import SelectProducto from './SelectProducto.vue';
+
 const props = defineProps(['producto'])
-let costo = 100;
+const sinUnidad = 0;
+const productoSelecionado = false;
+const unidadesSeleccionadas = ref(0);
+
+
+function manejarUnidades(unidades) {
+    unidadesSeleccionadas.value = unidades;
+
+}
+
+
+
+/**
+ * !Logica de agregado al carrito
+ */
+
+
 </script>
 <template>
-    <v-card class="card">
+    <v-card class="card" >
         <div class="contentCard">
             <div class="contenido">
                 <v-card-title class="productoNombre">
@@ -12,11 +30,11 @@ let costo = 100;
                 </v-card-title>
 
                 <div class="precio">
-                    <p> <strong>$ {{ props.producto.Costo }} </strong></p>
+                    <p> <strong>$ {{ props.producto.Costo }}--{{ unidadesSeleccionadas }} </strong></p>
                 </div>
 
                 <v-card-actions>
-                    <SelectProducto></SelectProducto>
+                    <SelectProducto @unidades="manejarUnidades"></SelectProducto>
                 </v-card-actions>
             </div>
             <v-avatar class="ma-3" size="100" rounded="0">
@@ -50,7 +68,7 @@ let costo = 100;
 .productoNombre {
     font-size: 15px;
     word-wrap: break-word;
-    white-space:normal;
+    white-space: normal;
     line-height: 1.4;
 }
 

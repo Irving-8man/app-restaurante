@@ -163,10 +163,6 @@ const horaSeleccionada = ref('');
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
-            <button type="button" @click="store.increment()">Incrementar</button>
-            <div>
-                {{ store.count }}
-            </div>
         </div>
     </section>
 </template>
