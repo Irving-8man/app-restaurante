@@ -1,6 +1,8 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import ButtonTypeOne from './ButtonTypeOne.vue';
+import ButtonCarrito from './ButtonCarrito.vue';
+
 </script>
 
 
@@ -39,7 +41,8 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
             </div>
         </div>
 
-        <div class="ingresar">
+        <div class="accionesBotones">
+            <ButtonCarrito></ButtonCarrito>
             <ButtonTypeOne enlace="/nuestraHistoria">Acceder</ButtonTypeOne>
         </div>
     </header>
@@ -58,7 +61,10 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
     color: white;
     display: flex;
     justify-content: space-between;
-    padding: .4375rem  2.1875rem;
+    align-content: center;
+    justify-items: center;
+    align-items: center;
+    padding: 1.125rem  2.1875rem;
     border-bottom: 1px solid white;
 }
 
@@ -75,8 +81,13 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
     gap: 8px;
 }
 
-.ingresar {
-    margin-top:10px;
+.accionesBotones{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    gap: 20px;
 }
 
 .titulo {

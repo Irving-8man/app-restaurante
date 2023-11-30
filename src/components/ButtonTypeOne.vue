@@ -5,7 +5,7 @@ const props = defineProps(['titulo', 'enlace'])
 </script>
 
 <template>
-    <span>
+    <span class="spanButon">
         <RouterLink :to="props.enlace" class="hbtn hb-fill-middle-rev-bg hpill hpad2">
         <slot></slot>
         </RouterLink>
@@ -20,7 +20,6 @@ const props = defineProps(['titulo', 'enlace'])
     display: inline-block;
     overflow: hidden;
     padding: 9px 20px;
-    margin: 0px 3px 6px;
     text-align: center;
     border: 2px solid rgb(255, 255, 255);
     text-decoration: none;
@@ -30,10 +29,6 @@ const props = defineProps(['titulo', 'enlace'])
     font-weight: 600;
 }
 
-
-.hbtn i {
-    padding-right: 8px;
-}
 
 
 .hb-fill-middle-rev-bg::before {
@@ -85,5 +80,11 @@ const props = defineProps(['titulo', 'enlace'])
     border-radius: 50px;
 }
 
-
+.spanButon{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+}
 </style>

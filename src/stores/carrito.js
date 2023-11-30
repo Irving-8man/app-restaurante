@@ -1,59 +1,90 @@
-import { ref, computed, reactive } from "vue";
 import { defineStore } from "pinia";
-import { useStorage } from "@vueuse/core";
 
-export const useCarritoStore = defineStore("carrito", () => {
-  //* Pagos
-  const carrito = useStorage("mi-carrito", []);
-  const costoTotal = useStorage("costo-total", 0);
-  const unidadesTotales = useStorage("unidadesTotales", 0);
+export const useCarritoStore = defineStore("carrito", {
+  state: () => {
+    return {
+      carrito: [],
+    };
+  },
 
+  getters: {
+    totalUnidades(state) {
+      return state.carrito.reduce(
+        (total, articulo) => total + articulo.Unidades,
+        0
+      );
+    },
 
-  /**
-   * ? CRUD de productos
-   */
+    totalPago(state) {
+      return state.carrito.reduce(
+        (total, articulo) => total + articulo.CostoParcial,
+        0
+      );
+    },
 
-  //!Agregar producto
-  function agregarProducto(producto) {
-    let indice = carrito.value.findIndex((p) => p.ID === producto.ID);
-    let noDisponible = -1;
+    getCarrito(state) {
+      return state.carrito;
+    },
+  },
 
-    if (indice !== noDisponible) {
-      carrito.value[indice].Unidades = producto.Unidades;
-      carrito.value[indice].CostoParcial = producto.CostoParcial;
-    } else {
-      carrito.value.push(producto);
-    }
-  }
+  actions: {
+    agregarProducto(producto) {
+      let indice = this.carrito.findIndex((p) => p.ID === producto.ID);
+      let noDisponible = -1;
+      let limiteAlto = 30;
+      let nuevasUnidades = 0;
 
-  //!eliminar producto
-  function eliminarProducto(ID) {
-    const indice = carrito.value.findIndex((item) => item.ID === ID);
-    if (indice !== -1) {
-      carrito.value.splice(indice, 1);
-    }
-  }
+      if (indice !== noDisponible) {
+        nuevasUnidades = this.carrito[indice].Unidades + producto.Unidades;
 
-  //! Buscar unidades por ID
-  function buscarUnidadesPorId(ID) {
-    const producto = carrito.value.find((p) => p.ID === ID);
-    return producto ? producto.Unidades : 0;
-  }
+        if (nuevasUnidades <= limiteAlto) {
+          this.carrito[indice].Unidades += producto.Unidades;
+          this.carrito[indice].CostoParcial += producto.CostoParcial;
 
+        }else{
+          this.carrito[indice].Unidades = limiteAlto;
+          this.carrito[indice].CostoParcial =  this.carrito[indice].Precio * limiteAlto;
+        }
 
-  //!Limpiar el storage
-  function limpiarStorage() {
-    carrito.value = [];
-    costoTotal.value = 0;
-    location.reload();
-  }
+      } else {
+        this.carrito.push({ ...producto });
+      }
+      console.log(this.carrito);
+    },
 
-  return {
-    carrito,
-    agregarProducto,
-    eliminarProducto,
-    buscarUnidadesPorId,
-    limpiarStorage,
-    costoTotal,
-  };
+    actualizarProductoUnidades(ID, unidadesActuales, unidadesAgregar) {
+      let limiteBajo = 1;
+      let limiteAlto = 30;
+      let nuevasUnidades = 0;
+      let noDisponible = -1;
+
+      //buscar el producto
+      let indice = this.carrito.findIndex((p) => p.ID === ID);
+
+      //disponible
+      if (indice !== noDisponible) {
+        nuevasUnidades = unidadesActuales + unidadesAgregar;
+
+        if (nuevasUnidades >= limiteBajo && nuevasUnidades <= limiteAlto) {
+            this.carrito[indice].Unidades = nuevasUnidades;
+            this.carrito[indice].CostoParcial =
+            this.carrito[indice].Precio * nuevasUnidades;
+        }
+      }
+    },
+    obtenerPagoParcial(ID) {
+      const producto = this.carrito.find((p) => p.ID === ID);
+      return producto ? producto.CostoParcial : 0;
+    },
+    eliminarProducto(ID) {
+      const indice = this.carrito.findIndex((item) => item.ID === ID);
+      if (indice !== -1) {
+        this.carrito.splice(indice, 1);
+      }
+    },
+    limpiarStorage() {
+      this.carrito = [];
+    },
+  },
+  persist: true,
 });

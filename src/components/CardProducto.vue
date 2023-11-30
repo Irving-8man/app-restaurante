@@ -1,11 +1,11 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useCarritoStore } from '@/stores/carrito';
-import { useEsteStore } from '@/stores/este';
+
 
 const props = defineProps(['producto'])
 const carrito = useCarritoStore();
-const este = useEsteStore();
+
 
 //! Limite de las unidades
 const LIMITE_BAJO = 1;
@@ -35,10 +35,10 @@ function agregarProducto() {
             "ID": props.producto.ID,
             "Nombre": props.producto.Nombre,
             "Unidades": unidadesSeleccionadas.value,
+            "Precio": props.producto.Costo,
             "CostoParcial": costoParcial
         }
-        /*carrito.agregarProducto(productoAgregado);*/
-        este.agregarProducto(productoAgregado);
+        carrito.agregarProducto(productoAgregado);
     } else {
         /* carrito.eliminarProducto(props.producto.ID); */
     }
@@ -145,14 +145,20 @@ function agregarProducto() {
     padding: 0 2px;
     background-color: #cfb326;
     background-color: var(--amarillo-dorado);
-    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-    transition-duration: 300ms;
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition: background-color 300ms cubic-bezier(0, 0, 0.2, 1),
+                box-shadow 300ms cubic-bezier(0, 0, 0.2, 1),
+                transform 0.1s ease-in-out;
+    will-change: transform;
 }
 
 .buttonAgregarCarrito:hover {
-    background-color: #e0c020;
-    background-color: #e7c725;
+    background-color: #f8da42;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.buttonAgregarCarrito:active {
+    transform: scale(0.9);
+    box-shadow: none; /* Elimina la sombra cuando se presiona */
 }
 
 

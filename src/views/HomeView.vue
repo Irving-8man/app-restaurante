@@ -1,6 +1,5 @@
 <script setup>
 import ButtonTwo from '../components/ButtonTypeTwo.vue';
-import Carrousel from '../components/Carrousel.vue';
 </script>
 
 <template>
@@ -275,7 +274,7 @@ import Carrousel from '../components/Carrousel.vue';
   align-content: center;
 }
 
-.imgClientes,.imgTia{
+.imgClientes, .imgTia{
   width: 80%;
 }
 

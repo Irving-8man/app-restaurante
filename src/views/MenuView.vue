@@ -16,9 +16,6 @@ let bebidas = productos.Bebidas;
     <div class="overlay"></div>
     <h2 class="titleSeccion">Menú</h2>
   </div>
-  <div class="secCarrito">
-    <ButtonCarrito></ButtonCarrito>
-  </div>
   <section>
     <div class="platillosCarrito">
       <h3 class="tituloSecPlatillo">Fideos</h3>
@@ -99,7 +96,8 @@ let bebidas = productos.Bebidas;
   justify-content: end;
   width: 100%;
   max-width: 1260px;
-  margin-right:10px;
+  position:relative;
+  padding: 0 20px;
 }
 
 .productos {
