@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { usePedidosStore } from "./pedidos";
 
 export const useCarritoStore = defineStore("carrito", {
   state: () => {
@@ -40,16 +41,14 @@ export const useCarritoStore = defineStore("carrito", {
         if (nuevasUnidades <= limiteAlto) {
           this.carrito[indice].Unidades += producto.Unidades;
           this.carrito[indice].CostoParcial += producto.CostoParcial;
-
-        }else{
+        } else {
           this.carrito[indice].Unidades = limiteAlto;
-          this.carrito[indice].CostoParcial =  this.carrito[indice].Precio * limiteAlto;
+          this.carrito[indice].CostoParcial =
+            this.carrito[indice].Precio * limiteAlto;
         }
-
       } else {
         this.carrito.push({ ...producto });
       }
-      console.log(this.carrito);
     },
 
     actualizarProductoUnidades(ID, unidadesActuales, unidadesAgregar) {
@@ -66,8 +65,8 @@ export const useCarritoStore = defineStore("carrito", {
         nuevasUnidades = unidadesActuales + unidadesAgregar;
 
         if (nuevasUnidades >= limiteBajo && nuevasUnidades <= limiteAlto) {
-            this.carrito[indice].Unidades = nuevasUnidades;
-            this.carrito[indice].CostoParcial =
+          this.carrito[indice].Unidades = nuevasUnidades;
+          this.carrito[indice].CostoParcial =
             this.carrito[indice].Precio * nuevasUnidades;
         }
       }
@@ -82,7 +81,14 @@ export const useCarritoStore = defineStore("carrito", {
         this.carrito.splice(indice, 1);
       }
     },
-    limpiarStorage() {
+    procesarPedido(){
+        let carrito = this.carrito;
+        const pedidos = usePedidosStore();
+
+        pedidos.nuevoPedido(...carrito);
+        this.limpiarCarrito();
+    },
+    limpiarCarrito() {
       this.carrito = [];
     },
   },

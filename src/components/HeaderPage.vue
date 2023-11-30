@@ -93,6 +93,7 @@ import ButtonCarrito from './ButtonCarrito.vue';
 .titulo {
     text-transform: uppercase;
     font-size: 1.25rem;
+    font-weight: bold;
 }
 
 .listNav {
@@ -102,7 +103,7 @@ import ButtonCarrito from './ButtonCarrito.vue';
 }
 
 .pagina>a {
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .contentPrincipal {

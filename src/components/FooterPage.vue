@@ -155,4 +155,7 @@ import { RouterLink } from 'vue-router'
 .tituloPrincipal{
     text-transform: uppercase;
 }
+.titulo{
+    font-weight: bold;
+}
 </style>
