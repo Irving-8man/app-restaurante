@@ -8,9 +8,7 @@
                             d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
                     </svg>
                 </div>
-                <div>
-                    Ver Orden
-                </div>
+                <div> Ver orden </div>
                 <div class="unidadesTotales">
                     <p>{{ carrito.totalUnidades }}</p>
                 </div>
@@ -24,11 +22,11 @@
             <div class="modal-content">
                 <div class="headerModal">
                     <div>
-                        <p>Carrito</p>
+                        <p class="tituloModal">Carrito</p>
                     </div>
                     <div>
                         <button @click="cancelarModal" class="cerrarModal">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 384 512">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="35" width="35" viewBox="0 0 384 512">
                                 <path fill="#ffffff"
                                     d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
                             </svg>
@@ -36,7 +34,7 @@
                     </div>
                 </div>
 
-                <div v-if="carrito.totalUnidades !== 0">
+                <div v-if="carrito.totalUnidades !== unidadesNulas">
                     <div>
                         <div class="resumeCarrito">
                             <table class="table">
@@ -54,7 +52,8 @@
                                         <td>{{ producto.Nombre }}</td>
                                         <td>
                                             <div class="controles">
-                                                <button class="botonControl" @click="carrito.actualizarProductoUnidades(producto.ID, producto.Unidades, -1)">
+                                                <button class="botonControl"
+                                                    @click="carrito.actualizarProductoUnidades(producto.ID, producto.Unidades, -1)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em"
                                                         viewBox="0 0 448 512" fill="#fff">
                                                         <path
@@ -62,11 +61,10 @@
                                                     </svg>
                                                 </button>
                                                 <div>
-                                                    <p>
-                                                        {{ producto.Unidades }}
-                                                    </p>
+                                                    <p>{{ producto.Unidades }} </p>
                                                 </div>
-                                                <button class="botonControl" @click="carrito.actualizarProductoUnidades(producto.ID, producto.Unidades, 1)">
+                                                <button class="botonControl"
+                                                    @click="carrito.actualizarProductoUnidades(producto.ID, producto.Unidades, 1)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em"
                                                         viewBox="0 0 448 512" fill="#fff">
                                                         <path
@@ -87,7 +85,7 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
+                                <tfoot class="tfoot">
                                     <tr>
                                         <td colspan="4" style="text-align: end;">
                                             <strong>Total: ${{ carrito.totalPago }}</strong>
@@ -98,8 +96,8 @@
                         </div>
                     </div>
                     <div class="contentAccion">
-                        <button @click="carrito.limpiarStorage" type="button">limpiar Store</button>
-                        <button type="button">Confirmar orden</button>
+                        <button @click="carrito.limpiarStorage" type="button" class="cancelarOrden">Cancelar orden</button>
+                        <button type="button" class="confirmarOrden">Confirmar orden</button>
                     </div>
                 </div>
                 <!--Carrito vacio-->
@@ -115,6 +113,8 @@
 import { ref } from 'vue';
 import { useCarritoStore } from '@/stores/carrito';
 const carrito = useCarritoStore();
+
+const unidadesNulas = 0;
 
 const modalVisible = ref(false);
 
@@ -150,7 +150,8 @@ const cancelarModal = () => {
     border: 2px solid white;
 }
 
-.buton:hover {
+.buton:hover,
+.cancelarOrden:hover {
     background-color: #991B1B;
     background-color: #991B1B;
 }
@@ -177,29 +178,55 @@ const cancelarModal = () => {
 
 .modal-content {
     position: fixed;
-    top: 55%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #ffffff;
-    padding: 40px 30px;
+    padding: 30px 25px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     z-index: 1000;
     width: 640px;
-    min-height: auto;
+    max-height: 400px;
     display: flex;
     flex-flow: column nowrap;
+    overflow-y: scroll;
+}
+
+/**Scroll de content */
+.modal-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background-color: #ffffff;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background-color:rgb(0, 0, 0);
+    border-radius: 6px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(71, 71, 71);
 }
 
 .headerModal {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
+    margin-bottom: 20px;
 }
+
+.tituloModal {
+    font-size: 1.5625rem;
+    font-weight: bolder;
+}
+
 
 .unidadesTotales {
     margin-left: 16px;
-    font-weight: bolder;
+    font-weight: bold;
 }
 
 .resumeCarrito {
@@ -220,17 +247,21 @@ const cancelarModal = () => {
     border-radius: 50%;
 }
 
+
+.cerrarModal:active {
+    transform: scale(0.9);
+}
+
 /**! Tabla */
 .table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 10px;
 }
 
 th,
 td {
     text-align: left;
-    padding: 0 8px;
+    padding: 0 4px 4px 0;
 }
 
 .thead th {
@@ -241,8 +272,16 @@ td {
     display: flex;
     flex-flow: row nowrap;
     justify-content: end;
+    justify-items: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    font-size: .875rem;
 }
 
+.tfoot {
+    border-top: 1px solid rgb(182, 180, 180);
+}
 
 .controles {
     display: flex;
@@ -281,4 +320,49 @@ td {
     transform: scale(0.9);
 }
 
-</style>
+
+/**Botones finales */
+.confirmarOrden {
+    display: flex;
+    flex-flow: row nowrap;
+    overflow: hidden;
+    padding: 7px 8px;
+    align-items: center;
+    gap: 30px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: rgb(48, 47, 47);
+    background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+    background-color: #e9cb34;
+    background-color: var(--amarillo-dorado);
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    box-shadow: 0 15px 13px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.confirmarOrden:hover {
+    background-color: var(--amarillo-dorado);
+    background-color: #dfbe1b;
+    color: rgb(0, 0, 0);
+}
+
+/**Para cancelar orden */
+.cancelarOrden {
+    display: flex;
+    flex-flow: row nowrap;
+    overflow: hidden;
+    padding: 7px 8px;
+    align-items: center;
+    gap: 30px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #ffffff;
+    background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+    background-color: #7F1D1D;
+    background-color: #DC2626;
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    box-shadow: 0 15px 13px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}</style>
