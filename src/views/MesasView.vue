@@ -128,35 +128,56 @@ const horaSeleccionada = ref('');
 
         <form class="busqueda">
 
-            <input type="date" id="fecha" name="fecha" class="input" :min="fechaMin" v-model="fechaSeleccionada">
-
-
-            <!--Manejo de las horas-->
-            <div class="contHoras">
-                <select name="Horas" id="horas" class="input" v-model="horaSeleccionada">
-                    <option disabled value="" class="option">Hora</option>
-                    <option v-for="hora in horasDisponibles" :value="hora.valorISO" class="option">
-                        {{ hora.hora }} hr
-                    </option>
-                </select>
-            </div>
-
-            <!--Manejo de numero de personas-->
-            <div>
-                <div><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path fill="#000000" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
+            <div class="contBotones">
+                <div>
+                    <input type="date" id="fecha" name="fecha" class="input" :min="fechaMin" v-model="fechaSeleccionada">
                 </div>
-                <select name="Personas" id="numPersonas" class="input" v-model="numPersonasSeleccionadas">
-                    <option disabled value="" class="option">Personas</option>
-                    <option v-for="numPersonas in personasReservas" :value="numPersonas.valor" class="option">
-                        {{ numPersonas.etiqueta }}
-                    </option>
-                </select>
+
+                <!--Manejo de las horas-->
+                <div class="contGSelect">
+                    <div class="contSelect">
+                        <div class="iconon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="19" width="19" viewBox="0 0 512 512">
+                                <path fill="#000000"
+                                    d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+                            </svg>
+                        </div>
+                        <select name="Horas" id="horas" class="input" v-model="horaSeleccionada">
+                            <option disabled value="" class="option">Hora</option>
+                            <option v-for="hora in horasDisponibles" :value="hora.valorISO" class="option">
+                                {{ hora.hora }} hr
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <!--Manejo de numero de personas-->
+                <div class="contGSelect">
+                    <div class="contSelect">
+                        <div class="iconon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="19" width="15" viewBox="0 0 448 512">
+                                <path fill="#000000"
+                                    d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                            </svg>
+                        </div>
+
+                        <select name="Personas" id="numPersonas" class="input" v-model="numPersonasSeleccionadas">
+                            <option disabled value="" class="option">Personas</option>
+                            <option v-for="numPersonas in personasReservas" :value="numPersonas.valor" class="option">
+                                {{ numPersonas.etiqueta }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <!---->
-            <button type="submit" class="input botonVamos">¡Vamos!</button>
-        </form>
+            <div>
+                <button type="submit" class="input botonVamos">¡Vamos!</button>
+            </div>
 
+        </form>
     </div>
 
     <div class="contentTitulo">
@@ -168,8 +189,6 @@ const horaSeleccionada = ref('');
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
 
-
-
         </div>
     </section>
 </template>
@@ -177,6 +196,7 @@ const horaSeleccionada = ref('');
 
 
 <style scoped>
+/**HEader */
 .backTitle {
     position: relative;
     background: linear-gradient(180deg, var(--rojo) 0%, var(--rojo) 12.5%, #000 86.98%, #000 100%);
@@ -198,61 +218,64 @@ const horaSeleccionada = ref('');
     z-index: 3;
 }
 
+/**Seccion de busqueda */
+
 .busqueda {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
-    gap: 30px;
+    gap: 100px;
     font-size: 1.125rem;
     text-align: center;
 }
 
+
+
+
+
+input,
+select,
 .input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 40px;
+    margin: 0;
     background-color: white;
-    border-radius: 2px;
-   
-    text-align: center;
-    cursor: pointer;
-}
-
-.secReservaciones {
-    min-height: 50vh;
-}
-
-.contentTitulo {
-    width: 100%;
-    max-width: 1260px;
-    text-align: start;
-    margin-bottom: 25px;
-}
-
-.tituloDisponible {
-    font-size: 1.875rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-}
-
-
-/**Seccion del grid */
-.reservaciones {
-    width: 100%;
-    max-width: 1260px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    justify-content: center;
-    align-items: center;
-    justify-items: center;
-    gap: 30px;
+    color: black;
+    border-radius: 3px;
+    padding: 0 3px;
 }
 
 select {
-    text-align-last: center;
+    -webkit-appearance: auto;
 }
 
-option {
-    text-align: center;
+.contSelect {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-content: center;
+}
+
+.iconon {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.contGSelect {
+    background-color: white;
+    border-radius: 3px;
+}
+
+.contBotones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
 }
 
 .botonVamos {
@@ -260,6 +283,7 @@ option {
     flex-flow: row nowrap;
     overflow: hidden;
     padding: 7px 8px;
+    width: 120px;
     align-items: center;
     font-weight: bolder;
     justify-content: center;
@@ -280,5 +304,45 @@ option {
     background-color: var(--amarillo-dorado);
     background-color: #e9c511;
     color: rgb(255, 255, 255);
+}
+
+
+
+/**Parte de las rservas */
+
+.secReservaciones {
+    min-height: 50vh;
+}
+
+.contentTitulo {
+    width: 100%;
+    max-width: 1260px;
+    text-align: start;
+    margin-bottom: 25px;
+}
+
+.tituloDisponible {
+    font-size: 1.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+
+
+
+
+
+
+/**Seccion del grid */
+.reservaciones {
+    width: 100%;
+    max-width: 1260px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    align-items: center;
+    justify-items: center;
+    gap: 30px;
 }
 </style>
