@@ -3,13 +3,10 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import CardReservacion from '../components/CardReservacion.vue';
 import mesasRestaurante from '../assets/data/mesasRestaurante.json';
 import personasReserva from '../assets/data/personasReserva.json';
-import { useCounterStore } from '@/stores/counter';
 import dayjs from 'dayjs';
 
 //? Datos para 
-const store = useCounterStore();
 const mesas = mesasRestaurante;
-
 
 /**
  * todo Logica de las horas y fecha
@@ -129,28 +126,35 @@ const horaSeleccionada = ref('');
     <div class="backTitle">
         <h2 class="titleSeccion">Encuentra tu mesa para la ocasión</h2>
 
-        <form class="busqueda" @submit.prevent="store.increment">
+        <form class="busqueda">
+
             <input type="date" id="fecha" name="fecha" class="input" :min="fechaMin" v-model="fechaSeleccionada">
+
 
             <!--Manejo de las horas-->
             <div class="contHoras">
                 <select name="Horas" id="horas" class="input" v-model="horaSeleccionada">
-                    <option disabled value="">Hora</option>
-                    <option v-for="hora in horasDisponibles" :value="hora.valorISO">
-                        {{ hora.hora }}
+                    <option disabled value="" class="option">Hora</option>
+                    <option v-for="hora in horasDisponibles" :value="hora.valorISO" class="option">
+                        {{ hora.hora }} hr
                     </option>
                 </select>
             </div>
 
             <!--Manejo de numero de personas-->
-            <select name="Personas" id="numPersonas" class="input" v-model="numPersonasSeleccionadas">
-                <option disabled value="">Personas</option>
-                <option v-for="numPersonas in personasReservas" :value="numPersonas.valor">
-                    {{ numPersonas.etiqueta }}
-                </option>
-            </select>
+            <div>
+                <div><svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><path fill="#000000" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/></svg>
+                </div>
+                <select name="Personas" id="numPersonas" class="input" v-model="numPersonasSeleccionadas">
+                    <option disabled value="" class="option">Personas</option>
+                    <option v-for="numPersonas in personasReservas" :value="numPersonas.valor" class="option">
+                        {{ numPersonas.etiqueta }}
+                    </option>
+                </select>
+            </div>
+
             <!---->
-            <button type="submit" class="input">Vamos!!</button>
+            <button type="submit" class="input botonVamos">¡Vamos!</button>
         </form>
 
     </div>
@@ -158,11 +162,14 @@ const horaSeleccionada = ref('');
     <div class="contentTitulo">
         <h3 class="tituloDisponible">Disponibles</h3>
     </div>
-    <section class="section">
+    <section class="section secReservaciones">
         <div class="reservaciones">
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
+
+
+
         </div>
     </section>
 </template>
@@ -175,7 +182,6 @@ const horaSeleccionada = ref('');
     background: linear-gradient(180deg, var(--rojo) 0%, var(--rojo) 12.5%, #000 86.98%, #000 100%);
     width: 100%;
     min-height: var(--altura-bar-sec);
-    padding: 20px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -198,22 +204,27 @@ const horaSeleccionada = ref('');
     justify-content: space-between;
     align-items: center;
     gap: 30px;
+    font-size: 1.125rem;
+    text-align: center;
 }
 
 .input {
     background-color: white;
     border-radius: 2px;
-    width: 200px;
-    height: 30px;
+   
+    text-align: center;
+    cursor: pointer;
 }
 
+.secReservaciones {
+    min-height: 50vh;
+}
 
 .contentTitulo {
     width: 100%;
     max-width: 1260px;
-    padding: 20px;
     text-align: start;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .tituloDisponible {
@@ -229,10 +240,45 @@ const horaSeleccionada = ref('');
     width: 100%;
     max-width: 1260px;
     display: grid;
-    grid-template-columns: repeat(2, 450px);
+    grid-template-columns: repeat(3, 1fr);
     justify-content: center;
     align-items: center;
     justify-items: center;
-    gap: 25px;
+    gap: 30px;
+}
+
+select {
+    text-align-last: center;
+}
+
+option {
+    text-align: center;
+}
+
+.botonVamos {
+    display: flex;
+    flex-flow: row nowrap;
+    overflow: hidden;
+    padding: 7px 8px;
+    align-items: center;
+    font-weight: bolder;
+    justify-content: center;
+    text-align: center;
+    gap: 30px;
+    border-radius: 8px;
+    color: rgb(255, 255, 255);
+    background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+    background-color: #e9cb34;
+    background-color: var(--amarillo-dorado);
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    box-shadow: 0 15px 13px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.botonVamos:hover {
+    background-color: var(--amarillo-dorado);
+    background-color: #e9c511;
+    color: rgb(255, 255, 255);
 }
 </style>

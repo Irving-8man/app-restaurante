@@ -97,7 +97,8 @@
                     </div>
                     <div class="contentAccion">
                         <button @click="carrito.limpiarCarrito" type="button" class="cancelarOrden">Cancelar orden</button>
-                        <button @click="carrito.procesarPedido" type="button" class="confirmarOrden">Confirmar orden</button>
+                        <button @click="carrito.procesarPedido" type="button" class="confirmarOrden">Confirmar
+                            orden</button>
                     </div>
                 </div>
                 <!--Carrito vacio-->
@@ -111,7 +112,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useCarritoStore } from '@/stores/carrito'; 
+import { useCarritoStore } from '@/stores/carrito';
 const carrito = useCarritoStore();
 
 const unidadesNulas = 0;
@@ -190,7 +191,8 @@ const cancelarModal = () => {
     max-height: 400px;
     display: flex;
     flex-flow: column nowrap;
-    overflow-y: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /**Scroll de content */
@@ -203,7 +205,7 @@ const cancelarModal = () => {
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-    background-color:rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0);
     border-radius: 6px;
 }
 
@@ -245,6 +247,9 @@ const cancelarModal = () => {
     cursor: pointer;
     overflow: hidden;
     border-radius: 50%;
+    position: absolute;
+    top: 0px;
+    right: 0px;
 }
 
 
@@ -365,4 +370,5 @@ td {
     transition-duration: 300ms;
     transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
     box-shadow: 0 15px 13px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}</style>
+}
+</style>

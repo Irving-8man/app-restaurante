@@ -1,7 +1,6 @@
 <script setup>
 import CardProducto from '../components/CardProducto.vue';
 import productosMenu from '../assets/data/productosMenu.json';
-import ButtonCarrito from '../components/ButtonCarrito.vue';
 const productos = productosMenu;
 let fideos = productos.Fideos;
 let pollos = productos.Pollos;

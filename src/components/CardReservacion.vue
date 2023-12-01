@@ -1,17 +1,17 @@
 <script setup>
-const props = defineProps(['producto'])
+const props = defineProps(['mesa'])
 
 </script>
 <template>
     <v-card class="card">
         <div class="contentCard">
-            <v-avatar size="200" rounded="0">
+            <v-avatar size="150" rounded="0">
                 <v-img src="src/assets/img/mesas/mesaIndividual_1.jpg" alt="Este"></v-img>
             </v-avatar>
 
             <div class="contenido">
                 <v-card-title class="mesaNombre">
-                    Mesa 1
+                    mesa 1
                 </v-card-title>
 
                 <div class="capacidad">
@@ -34,7 +34,7 @@ const props = defineProps(['producto'])
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-    gap: 40px;
+    gap: 45px;
 }
 
 
@@ -61,9 +61,9 @@ const props = defineProps(['producto'])
     background: #FFF;
     border-radius: 0.625rem;
     box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.25);
-    width: 450px;
+    width: 400px;
     max-height: 14.3125rem;
-    padding: 1.25rem;
+    padding: 1.25rem .625rem;
 }
 
 
