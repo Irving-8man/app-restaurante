@@ -11,7 +11,7 @@
   --vt-c-black-mute: #282828;
 
   
-  --rojo: rgb(219, 41, 41);
+  --rojo: #DB2929;
   --amarillo-dorado:#FFD814;
   --altura-bar-sec: 240px;
 
@@ -39,6 +39,15 @@
   --color-text: var(--vt-c-text-light-1);
 
   --section-gap: 160px;
+  --bg: #000000;
+  --clr-1: #db292931;
+  --clr-2: #ffff0041;
+  --clr-3: #dbd82a44;
+  --clr-4: #2adb5c52;
+
+  --blur: 1rem;
+  --fs: clamp(3rem, 7vw, 7rem);
+  --ls: clamp(-1.75px, -0.25vw, -3.5px);
 }
 
 

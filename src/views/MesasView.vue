@@ -188,14 +188,17 @@ const horaSeleccionada = ref('');
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
-
         </div>
     </section>
+
+
 </template>
 
 
 
 <style scoped>
+
+
 /**HEader */
 .backTitle {
     position: relative;
@@ -208,6 +211,7 @@ const horaSeleccionada = ref('');
     justify-content: space-around;
     align-items: center;
     margin-bottom: 40px;
+    padding-bottom: 10px;
 }
 
 
@@ -282,7 +286,7 @@ select {
     display: flex;
     flex-flow: row nowrap;
     overflow: hidden;
-    padding: 7px 8px;
+    padding: 9px 20px;
     width: 120px;
     align-items: center;
     font-weight: bolder;
@@ -330,16 +334,12 @@ select {
 
 
 
-
-
-
-
 /**Seccion del grid */
 .reservaciones {
     width: 100%;
     max-width: 1260px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
     justify-content: center;
     align-items: center;
     justify-items: center;
