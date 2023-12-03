@@ -1,17 +1,33 @@
 <!-- NotFound.vue -->
 <template>
-    <div>
-        <h2>404 - Página no encontrada</h2>
-        <p>Lo sentimos, la página que estás buscando no existe.</p>
-    </div>
+    <section class="contError404">
+        <div class="contMensaje">
+            <div>
+                <h2 class="tituloError"> <strong>404</strong> - Página no encontrada </h2>
+                <p> Lo sentimos, la página que estás buscando no existe.</p>
+            </div>
+        </div>
+        
+    </section>
 </template>
 
-<script>
-export default {
-    // Puedes agregar lógica adicional aquí si es necesario
-};
-</script>
+
 
 <style scoped>
-/* Estilos específicos para NotFound.vue si es necesario */
+.contError404 {
+    min-height: 50vh;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.contMensaje{
+    text-align: center;
+}
+
+.tituloError{
+    font-size: 50px;
+}
 </style>

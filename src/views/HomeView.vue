@@ -348,6 +348,7 @@ import ButtonTwo from '../components/ButtonTypeTwo.vue';
     padding: 0 40px;
     position: relative;
     overflow: hidden;
+    background-color: white;
 }
 
 .ContentHeroTitle {
@@ -367,7 +368,7 @@ import ButtonTwo from '../components/ButtonTypeTwo.vue';
 
 .heroTitle {
   font-size: 65px;
-  font-weight:900;
+  font-weight:1000;
   text-transform: uppercase;
 }
 

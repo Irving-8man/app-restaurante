@@ -3,29 +3,31 @@ const props = defineProps(['mesa'])
 
 </script>
 <template>
-    <v-card class="card">
-        <div class="contentCard">
-            <v-avatar size="150" rounded="0">
-                <v-img src="src/assets/img/mesas/mesaIndividual_1.jpg" alt="Este"></v-img>
-            </v-avatar>
+    <v-hover v-slot="{ isHovering, props }" close-delay="200">
+        <v-card class="card" :elevation="isHovering ? 16 : 2" :class="{ 'on-hover': isHovering }" v-bind="props">
+            <div class="contentCard">
+                <v-avatar size="150" rounded="0">
+                    <v-img src="src/assets/img/mesas/mesaIndividual_1.jpg" alt="Este"></v-img>
+                </v-avatar>
 
-            <div class="contenido">
-                <v-card-title class="mesaNombre">
-                    mesa 1
-                </v-card-title>
+                <div class="contenido">
+                    <v-card-title class="mesaNombre">
+                        mesa 1
+                    </v-card-title>
 
-                <div class="capacidad">
-                    <p>1 a 2 personas</p>
-                </div>
+                    <div class="capacidad">
+                        <p>1 a 2 personas</p>
+                    </div>
 
-                <div class="contentHorario">
-                    <div class="horario">
-                        <p>10:00 p.m.</p>
+                    <div class="contentHorario">
+                        <div class="horario">
+                            <p>10:00 p.m.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </v-card>
+        </v-card>
+    </v-hover>
 </template>
 
 <style scoped>
@@ -44,7 +46,7 @@ const props = defineProps(['mesa'])
     justify-content: space-between;
     align-content: start;
     text-align: start;
-    gap:10px;
+    gap: 10px;
 }
 
 .mesaNombre {
@@ -53,7 +55,7 @@ const props = defineProps(['mesa'])
     text-wrap: balance;
     line-height: 1.4;
     word-wrap: break-word;
-    white-space:normal;
+    white-space: normal;
 }
 
 .card {

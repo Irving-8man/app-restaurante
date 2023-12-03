@@ -1,12 +1,14 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch,reactive } from 'vue';
+import { storeToRefs } from 'pinia'
 import CardReservacion from '../components/CardReservacion.vue';
-import mesasRestaurante from '../assets/data/mesasRestaurante.json';
 import personasReserva from '../assets/data/personasReserva.json';
+import { useMesasStore } from '@/stores/mesas';
+import {useReservasStore} from '@/stores/reservas';
+
 import dayjs from 'dayjs';
 
-//? Datos para 
-const mesas = mesasRestaurante;
+//? Datos de mesas 
 
 /**
  * todo Logica de las horas y fecha
@@ -20,6 +22,7 @@ onMounted(() => {
         fechaCompletaAhora.value = dayjs();
     }, 1000);
 
+
     onUnmounted(() => clearInterval(intervalo));
 });
 
@@ -28,14 +31,15 @@ const fechaAhora = computed(() => {
     return fechaCompletaAhora.value.format('YYYY-MM-DD');
 });
 
-//Fecha seleccionada
+
+/**
+ * !Fecha seleccionada-Valor 1
+ */
 const fechaSeleccionada = ref(fechaAhora.value);
 
 // Variable computada para la fecha mínima
 const fechaMin = computed(() => {
     const horaFin = dayjs(fechaAhora.value).set('hour', 22).set('minute', 30);
-
-    // Si la hora actual ha pasado la horaFin, devuelve la fecha para el siguiente día
     if (dayjs().isAfter(horaFin)) {
         return dayjs(fechaAhora.value).add(1, 'day').format('YYYY-MM-DD');
     } else {
@@ -79,7 +83,6 @@ function obtenerHorasDisponiblesParaFecha(fechaMostrar) {
     const horas = [];
 
     while (horaActualCalculada.isBefore(horaFin) || horaActualCalculada.isSame(horaFin)) {
-        // Verifica si la hora actual calculada está después de la hora actual
         if (horaActualCalculada.isAfter(fechaCompletaAhora.value)) {
             const horaFormateada = horaActualCalculada.format('HH:mm');
             const valorISO = horaActualCalculada.format('YYYY-MM-DDTHH:mm:ss');
@@ -98,8 +101,6 @@ const horasDisponibles = computed(() => {
 
 watch(fechaSeleccionada, (nuevaFechaSeleccionada) => {
     const horasDisponiblesParaFecha = obtenerHorasDisponiblesParaFecha(nuevaFechaSeleccionada);
-
-    // Verifica si la horaSeleccionada actual está en las nuevas horas disponibles
     const horaExistente = horasDisponiblesParaFecha.find(hora => hora.valorISO === horaSeleccionada.value);
 
     // Si la hora actual no está en las nuevas horas disponibles y hay al menos una hora disponible, establece la primera como predeterminada
@@ -114,8 +115,60 @@ watch(fechaSeleccionada, (nuevaFechaSeleccionada) => {
  * todo Trabajando el numero de personas
  */
 const personasReservas = ref(personasReserva);
-const numPersonasSeleccionadas = ref('');
+/**
+ * !hora seleccionada-Valor 2
+ */
 const horaSeleccionada = ref('');
+
+/**
+ * !personas seleccionada-Valor 3
+ */
+const numPersonasSeleccionadas = ref('');
+
+const buscados = ref(false);
+
+/**
+ * *Mesas 
+ */
+    const mesasStore = useMesasStore();
+    const todasLasMesas = mesasStore.getMesas;
+    const mesasDisponibles = reactive([]);
+
+/**
+ * Reservas 
+ */
+    const reservasStore = useReservasStore();
+    const reservasTotales =  reservasStore.getReservas;
+/**
+ * !Trabajando el formulario
+ */
+
+const buscarReservasDia = (fecha) =>{
+    let mesasDelDia = [];
+    if(reservasTotales[fecha]!== undefined){
+        mesasDelDia  = reservasTotales[fecha];
+    }
+    return mesasDelDia;
+}
+
+const buscarMesas = () => {
+
+    let mesasDisponiblesFiltrada = [];
+
+    let reservacion = {
+        "fecha": fechaSeleccionada.value,
+        "hora": horaSeleccionada.value,
+        "numPersonas": numPersonasSeleccionadas.value
+    }
+
+    let mesasPedidas = todasLasMesas.filter(mesa => mesa.unidadesPersonas.includes(numPersonasSeleccionadas.value));
+    let reservasDeEseDia = buscarReservasDia(fechaSeleccionada.value);
+
+
+    console.log(reservasDeEseDia); 
+    buscados.value = !buscados.value;
+}
+
 
 
 
@@ -126,11 +179,11 @@ const horaSeleccionada = ref('');
     <div class="backTitle">
         <h2 class="titleSeccion">Encuentra tu mesa para la ocasión</h2>
 
-        <form class="busqueda">
+        <form class="busqueda" @submit.prevent="buscarMesas">
 
             <div class="contBotones">
                 <div>
-                    <input type="date" id="fecha" name="fecha" class="input" :min="fechaMin" v-model="fechaSeleccionada">
+                    <input type="date" id="fecha" name="fecha" class="input" :min="fechaMin" v-model="fechaSeleccionada"  required>
                 </div>
 
                 <!--Manejo de las horas-->
@@ -142,7 +195,7 @@ const horaSeleccionada = ref('');
                                     d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
                             </svg>
                         </div>
-                        <select name="Horas" id="horas" class="input" v-model="horaSeleccionada">
+                        <select name="Horas" id="horas" class="input" v-model="horaSeleccionada"  required>
                             <option disabled value="" class="option">Hora</option>
                             <option v-for="hora in horasDisponibles" :value="hora.valorISO" class="option">
                                 {{ hora.hora }} hr
@@ -162,7 +215,7 @@ const horaSeleccionada = ref('');
                             </svg>
                         </div>
 
-                        <select name="Personas" id="numPersonas" class="input" v-model="numPersonasSeleccionadas">
+                        <select name="Personas" id="numPersonas" class="input" v-model="numPersonasSeleccionadas" required>
                             <option disabled value="" class="option">Personas</option>
                             <option v-for="numPersonas in personasReservas" :value="numPersonas.valor" class="option">
                                 {{ numPersonas.etiqueta }}
@@ -180,25 +233,30 @@ const horaSeleccionada = ref('');
         </form>
     </div>
 
-    <div class="contentTitulo">
+    <div v-show="buscados" class="contentTitulo">
         <h3 class="tituloDisponible">Disponibles</h3>
     </div>
     <section class="section secReservaciones">
-        <div class="reservaciones">
-            <CardReservacion></CardReservacion>
+        <div v-show="buscados" class="reservaciones">
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
         </div>
+        <div class="previoBusqueda">
+            <div>
+                <p class="mensaje">Panda espera que disfrutes la estancia.</p>
+            </div>
+            <div>
+                <img src="src/assets/img/panda_mesas.gif" style="background-color: white;" alt="panda">
+            </div>
+        </div>
+
+        <button @click="buscados = !buscados" class="">cambias</button>
     </section>
-
-
 </template>
 
 
 
 <style scoped>
-
-
 /**HEader */
 .backTitle {
     position: relative;
@@ -243,12 +301,13 @@ select,
 .input {
     box-sizing: border-box;
     width: 100%;
-    height: 40px;
+    height: 45px;
     margin: 0;
     background-color: white;
     color: black;
     border-radius: 3px;
     padding: 0 3px;
+    cursor: pointer;
 }
 
 select {
@@ -323,6 +382,7 @@ select {
     max-width: 1260px;
     text-align: start;
     margin-bottom: 25px;
+    padding-left: 15px;
 }
 
 .tituloDisponible {
@@ -339,10 +399,26 @@ select {
     width: 100%;
     max-width: 1260px;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     justify-content: center;
     align-items: center;
     justify-items: center;
     gap: 30px;
+}
+
+/***Mesaje */
+.previoBusqueda {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: end;
+    margin-top: 50px;
+}
+
+.mensaje {
+    text-align: center;
+    font-size: 25px;
+    font-weight: 450;
 }
 </style>

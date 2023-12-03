@@ -40,10 +40,10 @@
 
   --section-gap: 160px;
   --bg: #000000;
-  --clr-1: #db292931;
-  --clr-2: #ffff0041;
-  --clr-3: #dbd82a44;
-  --clr-4: #2adb5c52;
+  --clr-1: #db292946;
+  --clr-2: #ffff0049;
+  --clr-3: #dbd82a4d;
+  --clr-4: #2adb5c44;
 
   --blur: 1rem;
   --fs: clamp(3rem, 7vw, 7rem);

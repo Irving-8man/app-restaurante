@@ -1,22 +1,25 @@
 import { defineStore } from "pinia";
-import dayjs from "dayjs";
 
 export const useReservasStore = defineStore("reservas", {
     state: () => {
         return {
-            reservaciones: [],
+            reservaciones: {},
         };
     },
     getters: {
-        getReservas(state) {
+        getReservas(state){
             return state.reservaciones;
-        },
+        }
     },
     actions: {
-        nuevaReservacion(cliente, reservacion) {
-            
-        },
-    },
+        nuevaReservacion(fecha,reservacion) {
 
-    persist: true,
+            if (!this.reservaciones[fecha]) {
+                this.reservaciones[fecha] = [];
+            }
+            this.reservaciones[fecha].push(reservacion);
+        },
+
+    },
+    persist:true,
 })
