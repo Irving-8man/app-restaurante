@@ -51,7 +51,6 @@ function onSubmit() {
 
     //Si es el admin
     if (dataUser.email === admin.email && dataUser.contrasenia === admin.contrasenia) {
-        console.log("Es el admin");
         dataUser['perfil'] = 'admin';
         dataUser['id'] = admin.id;
         resetForm();

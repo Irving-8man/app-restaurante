@@ -1,14 +1,23 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { reactive } from 'vue';
 import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
+const authStore = useAuthStore();
+const router = useRouter();
 
 const items = reactive([
-    { title: 'Reservaciones' },
-    { title: 'Pedidos' },
-    { title: 'Cerrar sesión' },
+    { title: 'Reservaciones', enlace:"/admin/adminmesas"},
+    { title: 'Pedidos' ,enlace:"/admin/adminpedidos"},
 ])
 
+
+const cerrarSesion = () =>{
+    authStore.logout();
+    router.push({ name: 'home' });
+    window.location.reload();
+}
 
 </script>
 
@@ -17,19 +26,23 @@ const items = reactive([
     <v-menu transition="slide-y-transition">
         <template v-slot:activator="{ props }">
             <v-btn v-bind="props" class="buton">
-                A
+                AD
             </v-btn>
         </template>
+        
         <v-list>
-            <v-list-item v-for="(item, i) in items" :key="i">
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item v-for="(item, index) in items" :key="index" :value="index">
+                <v-list-item-title> <RouterLink :to="item.enlace" class="enlace">{{ item.title }}</RouterLink> </v-list-item-title>
+            </v-list-item>
+            
+            <v-list-item>
+                <v-list-item-title class="cierre" @click="cerrarSesion"> <span class="esylea-red">Cerrar sesión</span> </v-list-item-title>
             </v-list-item>
         </v-list>
     </v-menu>
 </template>
 
 <style scoped>
-
 .buton {
     display: flex;
     flex-flow: row nowrap;
@@ -37,9 +50,9 @@ const items = reactive([
     font-size: 17px;
     align-items: center;
     justify-content: center;
-    padding: 23px ;
+    padding: 23px;
     border-radius: 55%;
-    margin:0;
+    margin: 0;
     font-weight: bolder;
     color: #ffffff;
     background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
@@ -52,9 +65,22 @@ const items = reactive([
     border: 2px solid white;
 }
 
-.buton:hover{
+.buton:hover {
     background-color: #E868E4;
     background-color: #E86898;
 }
 
+
+.enlace{
+    color: black;
+}
+
+.cierre{
+    color:var(--rojo);
+    cursor:pointer;
+}
+
+.cierre:hover{
+    color:black;
+}
 </style>

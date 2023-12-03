@@ -1,6 +1,6 @@
 <script setup>
-import { RouterLink } from 'vue-router'
-import { ref, computed, watchEffect } from 'vue';
+import { RouterLink } from 'vue-router';
+import { ref, watchEffect } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 
 import ButtonTypeOne from './ButtonTypeOne.vue';
@@ -25,7 +25,7 @@ watchEffect(() => {
             esAdmin.value = false;
             nombreC.value = userInfo.nombres;
         }
-        
+
         inicioSesion.value = true;
     } else {
         // Usuario no autenticado
@@ -81,7 +81,7 @@ watchEffect(() => {
                 <ButtonAdmin v-if="esAdmin"></ButtonAdmin>
                 <ButtonCliente v-else :nombre="nombreC"></ButtonCliente>
             </template>
-            <ButtonTypeOne enlace="/login">Acceder</ButtonTypeOne>
+            <ButtonTypeOne v-else enlace="/login">Acceder</ButtonTypeOne>
         </div>
     </header>
 </template>

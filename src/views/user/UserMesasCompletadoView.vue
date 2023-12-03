@@ -1,3 +1,48 @@
+<script setup>
+import { ref, onMounted,watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+
+const router = useRouter();
+const authStore = useAuthStore();
+const esCliente = ref(false);
+
+
+onMounted(() => {
+  let perfilCliente = 'cliente';
+  const userInfo = authStore.getUserInfo;
+
+  if (userInfo !== null) {
+    if (userInfo.perfil === perfilCliente) {
+      esCliente.value = true;
+    } else {
+      router.push({ name: 'home' });
+    }
+  } else {
+    router.push({ name: 'home' });
+  }
+
+}),
+
+  watchEffect(() => {
+    let perfilCliente = 'cliente';
+    const userInfo = authStore.getUserInfo;
+
+    if (userInfo !== null) {
+      if (userInfo.perfil === perfilCliente) {
+        esCliente.value = true;
+      } else {
+        router.push({ name: 'home' });
+      }
+    } else {
+      router.push({ name: 'home' });
+    }
+  });
+
+  /**
+   * ?formar composables luego
+   */
+</script>
 <template>
     <section class="container">
       <div class="menu-sidebar">

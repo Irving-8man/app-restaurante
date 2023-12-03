@@ -1,15 +1,25 @@
 <script setup>
-import { ref, reactive } from 'vue';
+import { reactive } from 'vue';
 import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+
+const authStore = useAuthStore();
+const router = useRouter();
 
 const data = defineProps(['nombre']);
 
 const items = reactive([
-    { title: 'Mi perfil' },
-    { title: 'Mis reservaciones' },
-    { title: 'Mis pedidos' },
-    { title: 'Cerrar sesión' },
+    { title: 'Mi perfil' , enlace:"/user/userperfil"},
+    { title: 'Mis reservaciones' , enlace:"/user/usermesasreserva"},
+    { title: 'Mis pedidos' , enlace:"/user/userpedidosproceso"},
 ])
+
+const cerrarSesion = () =>{
+    authStore.logout();
+    router.push({ name: 'home' });
+    window.location.reload();
+}
 
 
 </script>
@@ -23,8 +33,12 @@ const items = reactive([
             </v-btn>
         </template>
         <v-list>
-            <v-list-item v-for="(item, i) in items" :key="i">
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item v-for="(item, index) in items" :key="index" :value="index">
+                <v-list-item-title> <RouterLink :to="item.enlace" class="enlace">{{ item.title }}</RouterLink> </v-list-item-title>
+            </v-list-item>
+            
+            <v-list-item>
+                <v-list-item-title class="cierre" @click="cerrarSesion"> <span class="esylea-red">Cerrar sesión</span> </v-list-item-title>
             </v-list-item>
         </v-list>
     </v-menu>
@@ -59,4 +73,16 @@ const items = reactive([
     background-color: #dfbe1b;
 }
 
+.enlace{
+    color: black;
+}
+
+.cierre{
+    color:var(--rojo);
+    cursor:pointer;
+}
+
+.cierre:hover{
+    color:black;
+}
 </style>
