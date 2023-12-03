@@ -1,10 +1,10 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch,reactive } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, reactive } from 'vue';
 import { storeToRefs } from 'pinia'
 import CardReservacion from '../components/CardReservacion.vue';
 import personasReserva from '../assets/data/personasReserva.json';
 import { useMesasStore } from '@/stores/mesas';
-import {useReservasStore} from '@/stores/reservas';
+import { useReservasStore } from '@/stores/reservas';
 
 import dayjs from 'dayjs';
 
@@ -130,43 +130,64 @@ const buscados = ref(false);
 /**
  * *Mesas 
  */
-    const mesasStore = useMesasStore();
-    const todasLasMesas = mesasStore.getMesas;
-    const mesasDisponibles = reactive([]);
+const mesasStore = useMesasStore();
+const todasLasMesas = mesasStore.getMesas;
+const mesasDisponibles = reactive([]);
 
 /**
  * Reservas 
  */
-    const reservasStore = useReservasStore();
-    const reservasTotales =  reservasStore.getReservas;
+const reservasStore = useReservasStore();
+const reservasTotales = reservasStore.getReservas;
 /**
  * !Trabajando el formulario
  */
 
-const buscarReservasDia = (fecha) =>{
+const buscarReservasDia = (fecha) => {
     let mesasDelDia = [];
-    if(reservasTotales[fecha]!== undefined){
-        mesasDelDia  = reservasTotales[fecha];
+    if (reservasTotales[fecha] !== undefined) {
+        mesasDelDia = Object.values(reservasTotales[fecha]);
     }
     return mesasDelDia;
 }
 
 const buscarMesas = () => {
 
-    let mesasDisponiblesFiltrada = [];
-
+    const limite  = 0;
     let reservacion = {
         "fecha": fechaSeleccionada.value,
+        "ID_mesa": "M_4",
         "hora": horaSeleccionada.value,
-        "numPersonas": numPersonasSeleccionadas.value
+        "Cliente":"Irving Cupul",
+        "correo":"geyler05@",
+        "numPersonas": numPersonasSeleccionadas.value,
+        "estado":"activo"
     }
 
+
+    //Buscamos la mesas con sus caracteristicas que quiere, que son unidades
     let mesasPedidas = todasLasMesas.filter(mesa => mesa.unidadesPersonas.includes(numPersonasSeleccionadas.value));
+    //Buscamos las reservas de ese dia
     let reservasDeEseDia = buscarReservasDia(fechaSeleccionada.value);
 
+    //obtenemos las mesa en reserva de ese dia si alguna mesa esta ahi ese dia, si esta activo 
+    let mesasEnReservas = reservasDeEseDia.filter(mesa =>
+            mesasPedidas.some(reserva => reserva.ID_mesa === mesa.ID_mesa && reserva.estado !== "activo")
+    );
 
-    console.log(reservasDeEseDia); 
-    buscados.value = !buscados.value;
+    console.log(mesasPedidas);
+    console.log(reservasDeEseDia);
+    console.log(mesasEnReservas);
+
+    //Mostras la que se puedan
+    if(mesasEnReservas.length === limite){
+        mesasDisponibles.value = mesasEnReservas;
+        buscados.value = true;
+    }else{
+        mesasDisponibles.value = []
+        buscados.value = false;
+    }
+    
 }
 
 
@@ -183,7 +204,8 @@ const buscarMesas = () => {
 
             <div class="contBotones">
                 <div>
-                    <input type="date" id="fecha" name="fecha" class="input" :min="fechaMin" v-model="fechaSeleccionada"  required>
+                    <input type="date" id="fecha" name="fecha" class="input" :min="fechaMin" v-model="fechaSeleccionada"
+                        required>
                 </div>
 
                 <!--Manejo de las horas-->
@@ -195,7 +217,7 @@ const buscarMesas = () => {
                                     d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
                             </svg>
                         </div>
-                        <select name="Horas" id="horas" class="input" v-model="horaSeleccionada"  required>
+                        <select name="Horas" id="horas" class="input" v-model="horaSeleccionada" required>
                             <option disabled value="" class="option">Hora</option>
                             <option v-for="hora in horasDisponibles" :value="hora.valorISO" class="option">
                                 {{ hora.hora }} hr
@@ -238,6 +260,7 @@ const buscarMesas = () => {
     </div>
     <section class="section secReservaciones">
         <div v-show="buscados" class="reservaciones">
+            
             <CardReservacion></CardReservacion>
             <CardReservacion></CardReservacion>
         </div>
@@ -250,7 +273,6 @@ const buscarMesas = () => {
             </div>
         </div>
 
-        <button @click="buscados = !buscados" class="">cambias</button>
     </section>
 </template>
 
