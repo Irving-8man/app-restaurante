@@ -1,5 +1,20 @@
 <script setup>
-const props = defineProps(['mesa'])
+import { ref} from 'vue';
+const datosE = defineProps(['mesa','hora'])
+
+const fechaHora =  new Date(datosE.hora);
+
+// Obtener horas y minutos
+const horas = fechaHora.getHours();
+const minutos = fechaHora.getMinutes();
+
+// Formatear las horas y minutos con ceros a la izquierda si es necesario
+const horasFormateadas = horas < 10 ? `0${horas}` : horas;
+const minutosFormateados = minutos < 10 ? `0${minutos}` : minutos;
+
+// Crear la cadena en formato hh:mm
+const horaFormateada = ref('');
+horaFormateada.value = `${horasFormateadas}:${minutosFormateados}`;
 
 </script>
 <template>
@@ -7,21 +22,21 @@ const props = defineProps(['mesa'])
         <v-card class="card" :elevation="isHovering ? 16 : 2" :class="{ 'on-hover': isHovering }" v-bind="props">
             <div class="contentCard">
                 <v-avatar size="150" rounded="0">
-                    <v-img src="src/assets/img/mesas/mesaIndividual_1.jpg" alt="Este"></v-img>
+                    <v-img :src="datosE.mesa.imgM" alt="Mesa"></v-img>
                 </v-avatar>
 
                 <div class="contenido">
                     <v-card-title class="mesaNombre">
-                        mesa 1
+                        Mesa {{ datosE.mesa.numeroMesa }}
                     </v-card-title>
 
                     <div class="capacidad">
-                        <p>1 a 2 personas</p>
+                        <p>{{ datosE.mesa.unidadesPersonas[0] }} a {{ datosE.mesa.unidadesPersonas[1] }} personas</p>
                     </div>
 
                     <div class="contentHorario">
                         <div class="horario">
-                            <p>10:00 p.m.</p>
+                            <p>{{ horaFormateada }} hr</p>
                         </div>
                     </div>
                 </div>

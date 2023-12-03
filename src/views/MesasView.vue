@@ -132,7 +132,7 @@ const buscados = ref(false);
  */
 const mesasStore = useMesasStore();
 const todasLasMesas = mesasStore.getMesas;
-const mesasDisponibles = reactive([]);
+const mesasDisponibles = ref([]);
 
 /**
  * Reservas 
@@ -175,16 +175,14 @@ const buscarMesas = () => {
             mesasPedidas.some(reserva => reserva.ID_mesa === mesa.ID_mesa && reserva.estado !== "activo")
     );
 
-    console.log(mesasPedidas);
-    console.log(reservasDeEseDia);
-    console.log(mesasEnReservas);
 
-    //Mostras la que se puedan
+    //Mostras las mesas que se puedan
     if(mesasEnReservas.length === limite){
-        mesasDisponibles.value = mesasEnReservas;
+        let m = Object.values(mesasPedidas);
+        mesasDisponibles.value = m;
         buscados.value = true;
     }else{
-        mesasDisponibles.value = []
+        mesasDisponibles.value = [];
         buscados.value = false;
     }
     
@@ -258,12 +256,16 @@ const buscarMesas = () => {
     <div v-show="buscados" class="contentTitulo">
         <h3 class="tituloDisponible">Disponibles</h3>
     </div>
+
     <section class="section secReservaciones">
+        <!--Apartado de las mesas-->
         <div v-show="buscados" class="reservaciones">
-            
-            <CardReservacion></CardReservacion>
-            <CardReservacion></CardReservacion>
+            <template v-for="mesaDisp in mesasDisponibles" :key="mesaDisp.ID_mesa" >
+                <CardReservacion :mesa="mesaDisp" :hora="horaSeleccionada"></CardReservacion>
+            </template>
         </div>
+
+        <!--gif-->
         <div class="previoBusqueda">
             <div>
                 <p class="mensaje">Panda espera que disfrutes la estancia.</p>
@@ -272,7 +274,6 @@ const buscarMesas = () => {
                 <img src="src/assets/img/panda_mesas.gif" style="background-color: white;" alt="panda">
             </div>
         </div>
-
     </section>
 </template>
 
