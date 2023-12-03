@@ -1,7 +1,41 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import { ref, computed, watchEffect } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+
 import ButtonTypeOne from './ButtonTypeOne.vue';
 import ButtonCarrito from './ButtonCarrito.vue';
+import ButtonCliente from './ButtonCliente.vue';
+import ButtonAdmin from './ButtonAdmin.vue';
+
+
+const authStore = useAuthStore();
+const esAdmin = ref(false);
+const nombreC = ref("");
+const inicioSesion =ref(false) ;
+
+watchEffect(() => {
+    let perfilAdmin = 'admin';
+    const userInfo = authStore.getUserInfo;
+
+    if (userInfo !== null) {
+        if (userInfo.perfil === perfilAdmin) {
+            esAdmin.value = true;
+        } else {
+            esAdmin.value = false;
+            nombreC.value = userInfo.nombres;
+        }
+        
+        inicioSesion.value = true;
+    } else {
+        // Usuario no autenticado
+        esAdmin.value = false;
+        nombreC.value = "";
+        inicioSesion.value = false;
+    }
+});
+
+
 
 </script>
 
@@ -43,6 +77,10 @@ import ButtonCarrito from './ButtonCarrito.vue';
 
         <div class="accionesBotones">
             <ButtonCarrito></ButtonCarrito>
+            <template v-if="inicioSesion">
+                <ButtonAdmin v-if="esAdmin"></ButtonAdmin>
+                <ButtonCliente v-else :nombre="nombreC"></ButtonCliente>
+            </template>
             <ButtonTypeOne enlace="/login">Acceder</ButtonTypeOne>
         </div>
     </header>
@@ -64,12 +102,12 @@ import ButtonCarrito from './ButtonCarrito.vue';
     align-content: center;
     justify-items: center;
     align-items: center;
-    padding: 1.125rem  2.1875rem;
+    padding: 1.125rem 2.1875rem;
     border-bottom: 1px solid white;
 }
 
 
-.logo{
+.logo {
     clip-path: circle(50% at 50% 50%);
     height: 40px;
 }
@@ -81,7 +119,7 @@ import ButtonCarrito from './ButtonCarrito.vue';
     gap: 8px;
 }
 
-.accionesBotones{
+.accionesBotones {
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
@@ -113,5 +151,4 @@ import ButtonCarrito from './ButtonCarrito.vue';
     align-content: center;
     align-items: center;
 }
-
 </style>

@@ -19,7 +19,7 @@ export const useAuthStore = defineStore("auth", {
         this.user_info = user;
     },
     logout() {
-      this.user = null;
+      this.user_info = null;
     },
   },
 
