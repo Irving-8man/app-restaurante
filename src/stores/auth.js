@@ -2,22 +2,26 @@ import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    user: null,
+    user_info: null,
   }),
 
-  actions: {
-    login({ email, password }) {
-      this.user = { email };
+  getters: {
+    getUserInfo(state) {
+      return state.user_info;
     },
-    register(user) {
-      this.user = { ...user };
+  },
+
+  actions: {
+    login(datosUser) {
+      this.user_info = datosUser;
+    },
+    actulizarAuth(user){
+        this.user_info = user;
     },
     logout() {
       this.user = null;
     },
-    // Nueva acción para persistir en localStorage
-    persistState() {
-      localStorage.setItem("authState", JSON.stringify(this.$state));
-    },
   },
+
+  persist: true,
 });

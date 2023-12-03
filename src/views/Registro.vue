@@ -1,20 +1,30 @@
 <script setup>
 import { ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
 import { useAuthStore } from '@/stores/auth';
-import { useAdministradorStore } from '@/stores/administrador';
 import { useUsuariosStore } from '@/stores/usuarios';
 import { useRouter } from 'vue-router';
 
-
 const authStore = useAuthStore();
-const adminStore = useAdministradorStore();
 const usuariosStore = useUsuariosStore();
 const router = useRouter();
 
 
-/***
- * Del otro modal
- */
+const form = ref(false);
+const nombres = ref(null);
+const email = ref(null);
+const telefono = ref(null);
+const password = ref(null);
+const loading = ref(false);
+const visible = ref(false);
+
+const resetForm = () => {
+    nombres.value = null;
+    form.value = false;
+    email.value = null;
+    password.value = null;
+    telefono.value = null;
+};
 
 const emailRules = ref([(v) => !!v || 'Este campo es requerido', (v) => /.+@.+\..+/.test(v) || 'Ingrese un correo electrónico válido']);
 const contraseniaReglas = ref([
@@ -22,78 +32,44 @@ const contraseniaReglas = ref([
     (v) => (v && v.length >= 8) || 'Debe tener al menos 8 caracteres'
 ]);
 
-
-
-
-
-
-const form = ref(false);
-const email = ref(null);
-const password = ref(null);
-const loading = ref(false);
-const visible = ref(false);
-const sinRegistro = ref(false);
-
-
-const resetForm = () => {
-    form.value = false;
-    email.value = null;
-    password.value = null;
-};
+const numeroReglas = ref([
+    (v) => !!v || 'Este campo es requerido',
+    (v) => /^\d+$/.test(v) || 'Ingrese solo números'
+]);
 
 
 function onSubmit() {
     if (!form.value) return
     loading.value = true;
-    let dataUser = { email: email.value, contrasenia: password.value };
-    const admin = Object.values(adminStore.getAdmin)[0];
-
-
-    //Si es el admin
-    if (dataUser.email === admin.email && dataUser.contrasenia === admin.contrasenia) {
-        console.log("Es el admin");
-        dataUser['perfil'] = 'admin';
-        dataUser['id'] = admin.id;
-        resetForm();
-        authStore.login(dataUser);
-        router.push({ name: 'home' });
-
+    let dataUser = { nombres:nombres.value ,email: email.value,telefono:telefono.value , contrasenia: password.value ,id:""}
+    const clientes = usuariosStore.getUsuarios;
+    const clienteEncontrado = clientes.find(usuario => usuario.email === dataUser.email);
+    
+    //Comprobar si esta usado el correo
+    if (clienteEncontrado) {
+        console.log("duplicacion de datos");
     } else {
-        const clientes = usuariosStore.getUsuarios;
-        const clienteEncontrado = clientes.find(usuario => usuario.email === dataUser.email && usuario.contrasenia === dataUser.contrasenia);
-        if (clienteEncontrado) {
-            dataUser['id'] = clienteEncontrado.id;
-            dataUser['nombres'] = clienteEncontrado.nombres;
-            dataUser['email'] = clienteEncontrado.email;
-            dataUser['telefono'] = clienteEncontrado.telefono;
-            dataUser['contrasenia'] = clienteEncontrado.contrasenia;
-            dataUser['perfil'] = 'cliente';
-
-            resetForm();
-            authStore.login(dataUser);
-            router.push({ name: 'home' });
-        } else {
-            sinRegistro.value = true;
-            console.log("Credenciales incorrectas");
-        }
+        dataUser['id'] = uuidv4();
+        let usuarioNuevo = dataUser;
+        usuariosStore.agregarUsuario(usuarioNuevo); // se registra
+        
+        let loginUser = { id: dataUser.id, nombres:nombres.value ,email: email.value,telefono:telefono.value , contrasenia: password.value,perfil:"cliente"}
+        resetForm();
+        authStore.login(loginUser); //se loguea
+        router.push({ name: 'home' });
     }
     setTimeout(() => (loading.value = false), 2000)
 }
 
-const logout = () => {
-    localStorage.removeItem('authCredentials');
-    router.push({ name: 'home' });
-};
-
-
 </script>
 
+
 <template>
-    <section class="section_login">
-        <div class="custom_card">
+    <section class="conteResgistro">
+        <div class="cardRegistro">
             <div>
                 <div class="title">
-                    <h2>Acceder</h2>
+                    <h2>Crear cuenta</h2>
                 </div>
                 <div class="imge">
                     <svg xmlns="http://www.w3.org/2000/svg" height="5em" viewBox="0 0 512 512" fill="#e60f12">
@@ -103,37 +79,39 @@ const logout = () => {
                 </div>
             </div>
 
+
             <div>
                 <v-form v-model="form" @submit.prevent="onSubmit">
-                    <v-text-field v-model="email" color="primary input" class="mb-2" :readonly="loading"
-                        variant="underlined" :rules="emailRules" label="Correo electrónico">
+                    <v-text-field v-model="nombres" color="primary input" label="Nombre(s)" variant="underlined"
+                        :readonly="loading">
                     </v-text-field>
+
+                    <v-text-field v-model="email" color="primary input" label="Correo electrónico" :readonly="loading"
+                        variant="underlined" :rules="emailRules"></v-text-field>
+
+                    <v-text-field v-model="telefono" color="primary input" label="Número telefónico" :readonly="loading"
+                        :rules="numeroReglas" variant="underlined"></v-text-field>
+
+
                     <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                         :type="visible ? 'text' : 'password'" placeholder="Ingresar contraseña" label="Contraseña"
                         prepend-inner-icon="mdi-lock-outline" :readonly="loading" v-model="password" variant="underlined"
-                        :rules="contraseniaReglas" @click:append-inner="visible = !visible" class="input">
-                    </v-text-field>
+                        :rules="contraseniaReglas" @click:append-inner="visible = !visible" class="input"></v-text-field>
 
                     <v-spacer></v-spacer>
-                    <v-btn :disabled="!form" :loading="loading" block size="large" type="submit" class="butonLogin"
+                    <v-btn :disabled="!form" :loading="loading" block size="large" type="submit" class="butonRegistro"
                         variant="elevated">
-                        Iniciar sesión
+                        Registrar
                     </v-btn>
-
                 </v-form>
-                <div class="link_resgistro">
-                    <p>¿No tienes una cuenta? <router-link to="/registro" class="enlace esylea-red">Regístrate</router-link>
-                    </p>
-                </div>
             </div>
 
         </div>
     </section>
 </template>
 
-
 <style scoped>
-.section_login {
+.conteResgistro {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -142,17 +120,18 @@ const logout = () => {
     margin: 30px 0;
 }
 
-.custom_card {
+.cardRegistro {
     max-width: 350px;
-    background-color: white;
-    color: black;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
     gap: 40px;
     margin-bottom: 30px;
+}
+
+.input {
+    width: 300px;
 }
 
 .title {
@@ -161,23 +140,8 @@ const logout = () => {
     margin-bottom: 40px;
 }
 
-.link_resgistro {
-    margin-top: 20px;
-}
 
-.input {
-    width: 300px;
-}
-
-.enlace {
-    color: var(--rojo);
-}
-
-.enlace:hover {
-    color: black;
-}
-
-.butonLogin {
+.butonRegistro {
     display: flex;
     flex-flow: row nowrap;
     overflow: hidden;
@@ -197,7 +161,7 @@ const logout = () => {
     box-shadow: 0 15px 13px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.butonLogin:hover {
+.butonRegistro:hover {
     background-color: var(--amarillo-dorado);
     background-color: #dfbe1b;
     color: rgb(0, 0, 0);
