@@ -25,16 +25,16 @@ import ButtonCarrito from './ButtonCarrito.vue';
                 <nav>
                     <ul class="listNav">
                         <li class="pagina">
-                            <RouterLink to="/menu" class="enlace">Menú</RouterLink>
+                            <RouterLink to="/menu" class="enlace esylea-white">Menú</RouterLink>
                         </li>
                         <li class="pagina">
-                            <RouterLink to="/mesas" class="enlace">Mesas</RouterLink>
+                            <RouterLink to="/mesas" class="enlace esylea-white">Mesas</RouterLink>
                         </li>
                         <li class="pagina">
-                            <RouterLink to="/contacto" class="enlace">Contacto</RouterLink>
+                            <RouterLink to="/contacto" class="enlace esylea-white">Contacto</RouterLink>
                         </li>
                         <li class="pagina">
-                            <RouterLink to="/nuestraHistoria" class="enlace">Nuestra historia</RouterLink>
+                            <RouterLink to="/nuestraHistoria" class="enlace esylea-white">Nuestra historia</RouterLink>
                         </li>
                     </ul>
                 </nav>
@@ -43,7 +43,7 @@ import ButtonCarrito from './ButtonCarrito.vue';
 
         <div class="accionesBotones">
             <ButtonCarrito></ButtonCarrito>
-            <ButtonTypeOne enlace="/nuestraHistoria">Acceder</ButtonTypeOne>
+            <ButtonTypeOne enlace="/login">Acceder</ButtonTypeOne>
         </div>
     </header>
 </template>

@@ -14,12 +14,13 @@ a,
 
 
 
-.enlace:hover{
+.enlace:hover {
   color: var(--amarillo-dorado);
 }
 
 .icon:hover path {
-  fill: var(--amarillo-dorado); /* Cambia el color de relleno a rojo al hacer hover */
+  fill: var(--amarillo-dorado);
+  /* Cambia el color de relleno a rojo al hacer hover */
 }
 
 
@@ -33,14 +34,74 @@ main {
   align-items: center;
 }
 
-strong, .strong{
+strong,
+.strong {
   color: var(--rojo)
 }
 
-.section,section {
+.section,
+section {
   width: 100%;
   max-width: 1260px;
   margin-bottom: 50px;
   min-height: 80vh;
   padding: 0 20px;
+}
+
+
+.esylea,
+.esylea-white,
+.esylea-black,.esylea-red {
+  position: relative;
+  text-decoration: none;
+}
+
+.esylea::before {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background-color: #000;
+  transition: width 0.15s ease-in-out;
+  transform-origin: center bottom;
+}
+
+.esylea-white::before {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background-color: #ffffff;
+  transition: width 0.4s ease-in-out;
+  transform-origin: center bottom;
+}
+
+.esylea-black::before {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background-color: #000;
+  transition: width 0.4s ease-in-out;
+  transform-origin: center bottom;
+}
+
+.esylea-red::before {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background-color: var(--rojo);
+  transition: width 0.4s ease-in-out;
+  transform-origin: center bottom;
+}
+
+.esylea:hover::before,
+.esylea-white:hover::before,
+.esylea-black:hover::before,.esylea-red:hover::before{
+  width: 100%;
 }
