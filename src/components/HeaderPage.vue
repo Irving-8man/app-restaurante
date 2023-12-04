@@ -7,12 +7,14 @@ import ButtonTypeOne from './ButtonTypeOne.vue';
 import ButtonCarrito from './ButtonCarrito.vue';
 import ButtonCliente from './ButtonCliente.vue';
 import ButtonAdmin from './ButtonAdmin.vue';
+import AlertComplete from '../components/AlertComplete.vue';
+import AlertError from '../components/AlertError.vue';
 
 
 const authStore = useAuthStore();
 const esAdmin = ref(false);
 const nombreC = ref("");
-const inicioSesion =ref(false) ;
+const inicioSesion = ref(false);
 
 watchEffect(() => {
     let perfilAdmin = 'admin';
@@ -36,6 +38,11 @@ watchEffect(() => {
 });
 
 
+const completadaPedido = ref(null);
+function recibiendoRespuesta(respuesta) {
+    completadaPedido.value = null;
+    completadaPedido.value = respuesta;
+}
 
 </script>
 
@@ -76,7 +83,7 @@ watchEffect(() => {
         </div>
 
         <div class="accionesBotones">
-            <ButtonCarrito></ButtonCarrito>
+            <ButtonCarrito @pedidoCompletado="recibiendoRespuesta"></ButtonCarrito>
             <template v-if="inicioSesion">
                 <ButtonAdmin v-if="esAdmin"></ButtonAdmin>
                 <ButtonCliente v-else :nombre="nombreC"></ButtonCliente>
@@ -84,6 +91,12 @@ watchEffect(() => {
             <ButtonTypeOne v-else enlace="/login">Acceder</ButtonTypeOne>
         </div>
     </header>
+    <template v-if="completadaPedido ">
+        <AlertComplete :activo="true" :mensaje="'Pedido exitoso'"></AlertComplete>
+    </template>
+    <template v-if="completadaPedido  === false">
+        <AlertError :activo="true" :mensaje="'Fallo el pedido'"></AlertError>
+    </template>
 </template>
 
 

@@ -1,3 +1,37 @@
+<script setup>
+import { ref ,defineEmits} from 'vue';
+import { useCarritoStore } from '@/stores/carrito';
+import { useAuthStore } from '@/stores/auth';
+const carrito = useCarritoStore();
+const authStore = useAuthStore();
+
+const emit = defineEmits(['pedidoCompletado']);
+
+const pedidoHecho = ref(false);
+const unidadesNulas = 0;
+
+const modalVisible = ref(false);
+
+
+const mostrarModal = () => {
+    modalVisible.value = true;
+};
+
+const cancelarModal = () => {
+    modalVisible.value = false;
+};
+
+//procesamiento del carrito
+function procesarCarrito(){
+    const userInfo = authStore.getUserInfo;
+    carrito.procesarPedido(userInfo.id);
+    pedidoHecho.value = true;
+    emit('pedidoCompletado', pedidoHecho.value);
+    cancelarModal();
+}
+
+</script>
+
 <template>
     <div style="color:black">
         <button class="buton" @click="mostrarModal">
@@ -97,7 +131,7 @@
                     <div class="contentAccion">
                         <button @click="carrito.limpiarCarrito" type="button" class="cancelarOrden">Cancelar
                             orden</button>
-                        <button @click="carrito.procesarPedido" type="button" class="confirmarOrden">Confirmar
+                        <button @click="procesarCarrito" type="button" class="confirmarOrden">Confirmar
                             orden</button>
                     </div>
                 </div>
@@ -109,26 +143,6 @@
         </v-dialog>
     </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-import { useCarritoStore } from '@/stores/carrito';
-const carrito = useCarritoStore();
-
-const unidadesNulas = 0;
-
-const modalVisible = ref(false);
-
-
-const mostrarModal = () => {
-    modalVisible.value = true;
-};
-
-const cancelarModal = () => {
-    modalVisible.value = false;
-};
-
-</script>
 
 <style scoped>
 .buton {

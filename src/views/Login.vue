@@ -4,7 +4,8 @@ import { useAuthStore } from '@/stores/auth';
 import { useAdministradorStore } from '@/stores/administrador';
 import { useUsuariosStore } from '@/stores/usuarios';
 import { useRouter } from 'vue-router';
-
+import AlertComplete from '../components/AlertComplete.vue';
+import AlertError from '../components/AlertError.vue';
 
 const authStore = useAuthStore();
 const adminStore = useAdministradorStore();
@@ -41,22 +42,25 @@ const resetForm = () => {
     password.value = null;
 };
 
+const falloLogin = ref(null);
 
+//ingresando
 function onSubmit() {
     if (!form.value) return
     loading.value = true;
     let dataUser = { email: email.value, contrasenia: password.value };
     const admin = Object.values(adminStore.getAdmin)[0];
+    falloLogin.value = null;
 
-
+    setTimeout(() => (loading.value = false), 2000)
     //Si es el admin
     if (dataUser.email === admin.email && dataUser.contrasenia === admin.contrasenia) {
         dataUser['perfil'] = 'admin';
         dataUser['id'] = admin.id;
         resetForm();
         authStore.login(dataUser);
+        falloLogin.value = true;
         router.push({ name: 'home' });
-
     } else {
         const clientes = usuariosStore.getUsuarios;
         const clienteEncontrado = clientes.find(usuario => usuario.email === dataUser.email && usuario.contrasenia === dataUser.contrasenia);
@@ -70,19 +74,15 @@ function onSubmit() {
 
             resetForm();
             authStore.login(dataUser);
+            falloLogin.value = true;
             router.push({ name: 'home' });
         } else {
             sinRegistro.value = true;
-            console.log("Credenciales incorrectas");
+            falloLogin.value = false;
         }
     }
-    setTimeout(() => (loading.value = false), 2000)
 }
 
-const logout = () => {
-    localStorage.removeItem('authCredentials');
-    router.push({ name: 'home' });
-};
 
 
 </script>
@@ -126,6 +126,12 @@ const logout = () => {
                 </div>
             </div>
 
+            <template v-if="falloLogin">
+                <AlertComplete :activo="true" :mensaje="'Bienvenido'"></AlertComplete>
+            </template>
+            <template v-if="falloLogin === false">
+                <AlertError :activo="true" :mensaje="'Error en las credenciales'"></AlertError>
+            </template>
         </div>
     </section>
 </template>

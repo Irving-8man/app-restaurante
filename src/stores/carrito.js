@@ -81,11 +81,10 @@ export const useCarritoStore = defineStore("carrito", {
         this.carrito.splice(indice, 1);
       }
     },
-    procesarPedido(){
+    procesarPedido(idCliente){
         let carrito = this.carrito;
         const pedidos = usePedidosStore();
-
-        pedidos.nuevoPedido(...carrito);
+        pedidos.nuevoPedido(idCliente,...carrito);
         this.limpiarCarrito();
     },
     limpiarCarrito() {

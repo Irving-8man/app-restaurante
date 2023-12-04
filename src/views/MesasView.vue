@@ -204,6 +204,7 @@ const buscarMesas = () => {
 const completadaReserva = ref(null);
 
 function recibiendoRespuesta(respuesta) {
+    completadaReserva.value = null;
     completadaReserva.value = respuesta;
     if (respuesta) {
         mesasDisponibles.value = [];
@@ -211,6 +212,7 @@ function recibiendoRespuesta(respuesta) {
     }
     horaSeleccionada.value = '';
     numPersonasSeleccionadas.value = '';
+    buscados.value = null;
 }
 
 

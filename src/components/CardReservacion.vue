@@ -4,6 +4,7 @@ const datosE = defineProps(['mesa', 'hora', 'numPersonas', 'fechaReserva'])
 const emit = defineEmits(['reservaHecha']);
 import { useAuthStore } from '@/stores/auth';
 import {useReservasStore} from '@/stores/reservas'
+import { v4 as uuidv4 } from 'uuid';
 
 
 const fechaHora = new Date(datosE.hora);
@@ -25,13 +26,14 @@ fechaFormateada.value = `${partesFecha[2]}/${partesFecha[1]}/${partesFecha[0]}`;
  */
 const reservaCompletada = ref(false);
 const authStore = useAuthStore();
-const userInfo = authStore.getUserInfo;
 const reservasStore = useReservasStore();
 
 
 function procesarReserva() {
+    const userInfo = authStore.getUserInfo;
     let conseguido = false;
     let reservacion = {
+        "ID_reserva":uuidv4(),
         "Fecha": datosE.fechaReserva,
         "ID_mesa": datosE.mesa.ID_mesa,
         "Hora": datosE.hora,
@@ -40,10 +42,8 @@ function procesarReserva() {
         "Estado": "activo"
     }
     
-    conseguido = reservasStore.nuevaReservacion(datosE.fechaReserva,reservacion);
-    if(conseguido===1){
-        reservaCompletada.value = true;
-    }
+    reservasStore.nuevaReservacion(datosE.fechaReserva,reservacion);
+    reservaCompletada.value = true;
     emit('reservaHecha', reservaCompletada.value);
     showDialog.value = false;
 }

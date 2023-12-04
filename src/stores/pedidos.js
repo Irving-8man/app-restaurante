@@ -15,34 +15,34 @@ export const usePedidosStore = defineStore("pedidos", {
 
     },
     actions: {
-        nuevoPedido(pedido) {
+        nuevoPedido(idCliente,pedido) {
             const useNumPedido = useNumeroPedidoStore(); 
             const {getNumeroPedido} =  useNumPedido;
 
             let miNuevoPedido = {
                 "NumPedido": getNumeroPedido,
                 "Fecha": dayjs().format('DD-MM-YYYY'),
-                "Correo": "geyler0502@outlook.com",
+                "ID_cliente": idCliente,
                 "Entregado":false,
                 "Carrito": pedido,
             };
 
-            this.misPedidos.push({ ...miNuevoPedido });
+            this.pedidos.push({ ...miNuevoPedido });
             useNumPedido.siguientePedido();
         },
         eliminarPedido(NumPedido){
-            const index = this.misPedidos.findIndex(pedido => pedido.NumPedido === NumPedido);
+            const index = this.pedidos.findIndex(pedido => pedido.NumPedido === NumPedido);
             if (index !== -1) {
-                this.misPedidos.splice(index, 1);
+                this.pedidos.splice(index, 1);
             }
         },
         pedidoEntregado(NumPedido) {
             const entregado = true; 
-            let indice = this.misPedidos.findIndex((p) => p.NumPedido === NumPedido);
+            let indice = this.pedidos.findIndex((p) => p.NumPedido === NumPedido);
             let noDisponible = -1;
             
             if (indice !== noDisponible) {
-                this.misPedidos[indice].Entregado = entregado;
+                this.pedidos[indice].Entregado = entregado;
             }
         },
     },

@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAuthStore } from '@/stores/auth';
 import { useUsuariosStore } from '@/stores/usuarios';
 import { useRouter } from 'vue-router';
+import AlertComplete from '../components/AlertComplete.vue';
+import AlertError from '../components/AlertError.vue';
 
 const authStore = useAuthStore();
 const usuariosStore = useUsuariosStore();
@@ -37,25 +39,28 @@ const numeroReglas = ref([
     (v) => /^\d+$/.test(v) || 'Ingrese solo números'
 ]);
 
+const repetidoCredencial = ref(null);
 
 function onSubmit() {
     if (!form.value) return
     loading.value = true;
-    let dataUser = { nombres:nombres.value ,email: email.value,telefono:telefono.value , contrasenia: password.value ,id:""}
+    let dataUser = { nombres: nombres.value, email: email.value, telefono: telefono.value, contrasenia: password.value, id: "" }
     const clientes = usuariosStore.getUsuarios;
     const clienteEncontrado = clientes.find(usuario => usuario.email === dataUser.email);
-    
+    repetidoCredencial.value = null;
+
     //Comprobar si esta usado el correo
     if (clienteEncontrado) {
-        console.log("duplicacion de datos");
+        repetidoCredencial.value = false;
     } else {
         dataUser['id'] = uuidv4();
         let usuarioNuevo = dataUser;
         usuariosStore.agregarUsuario(usuarioNuevo); // se registra
-        
-        let loginUser = { id: dataUser.id, nombres:nombres.value ,email: email.value,telefono:telefono.value , contrasenia: password.value,perfil:"cliente"}
+
+        let loginUser = { id: dataUser.id, nombres: nombres.value, email: email.value, telefono: telefono.value, contrasenia: password.value, perfil: "cliente" }
         resetForm();
         authStore.login(loginUser); //se loguea
+        repetidoCredencial.value =  true;
         router.push({ name: 'home' });
     }
     setTimeout(() => (loading.value = false), 2000)
@@ -105,8 +110,13 @@ function onSubmit() {
                     </v-btn>
                 </v-form>
             </div>
-
         </div>
+        <template v-if="repetidoCredencial">
+            <AlertComplete :activo="true" :mensaje="'Bienvenido'"></AlertComplete>
+        </template>
+        <template v-if="repetidoCredencial === false">
+            <AlertError :activo="true" :mensaje="'El correo que proporciono ya esta en uso'"></AlertError>
+        </template>
     </section>
 </template>
 
