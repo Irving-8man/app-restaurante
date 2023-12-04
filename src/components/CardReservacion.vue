@@ -1,26 +1,56 @@
 <script setup>
-import { ref} from 'vue';
-const datosE = defineProps(['mesa','hora'])
+import { ref, defineEmits } from 'vue';
+const datosE = defineProps(['mesa', 'hora', 'numPersonas', 'fechaReserva'])
+const emit = defineEmits(['reservaHecha']);
+import { useAuthStore } from '@/stores/auth';
+import {useReservasStore} from '@/stores/reservas'
 
-const fechaHora =  new Date(datosE.hora);
 
-// Obtener horas y minutos
+const fechaHora = new Date(datosE.hora);
 const horas = fechaHora.getHours();
 const minutos = fechaHora.getMinutes();
-
-// Formatear las horas y minutos con ceros a la izquierda si es necesario
 const horasFormateadas = horas < 10 ? `0${horas}` : horas;
 const minutosFormateados = minutos < 10 ? `0${minutos}` : minutos;
-
-// Crear la cadena en formato hh:mm
 const horaFormateada = ref('');
 horaFormateada.value = `${horasFormateadas}:${minutosFormateados}`;
+
+const showDialog = ref(false)
+
+const partesFecha = datosE.hora.split('T')[0].split('-');
+const fechaFormateada = ref('');
+fechaFormateada.value = `${partesFecha[2]}/${partesFecha[1]}/${partesFecha[0]}`;
+
+/**
+ * Aqui se procesara la reserva
+ */
+const reservaCompletada = ref(false);
+const authStore = useAuthStore();
+const userInfo = authStore.getUserInfo;
+const reservasStore = useReservasStore();
+
+
+function procesarReserva() {
+    let conseguido = false;
+    let reservacion = {
+        "Fecha": datosE.fechaReserva,
+        "ID_mesa": datosE.mesa.ID_mesa,
+        "Hora": datosE.hora,
+        "ID_cliente": userInfo.id,
+        "NumPersonas": datosE.numPersonas,
+        "Estado": "activo"
+    }
+    
+    conseguido = reservasStore.nuevaReservacion(datosE.fechaReserva,reservacion);
+    console.log(conseguido)
+    showDialog.value = false;
+}
+
 
 </script>
 <template>
     <v-hover v-slot="{ isHovering, props }" close-delay="200">
         <v-card class="card" :elevation="isHovering ? 16 : 2" :class="{ 'on-hover': isHovering }" v-bind="props">
-            <div class="contentCard">
+            <div class="contentCard" @click="showDialog = true">
                 <v-avatar size="150" rounded="0">
                     <v-img :src="datosE.mesa.imgM" alt="Mesa"></v-img>
                 </v-avatar>
@@ -41,6 +71,29 @@ horaFormateada.value = `${horasFormateadas}:${minutosFormateados}`;
                     </div>
                 </div>
             </div>
+
+            <!-- Componente v-dialog -->
+            <v-dialog v-model="showDialog" max-width="500px" class="modalS">
+                <v-card class="modalReservacion">
+                    <v-card-title class="tituloModal">Hacer reservación</v-card-title>
+                    <div>
+                        <ul class="datosMesa">
+                            <li class="carac">Mesa</li>
+                            <li>{{ datosE.mesa.numeroMesa }}</li>
+                            <li class="carac">Personas</li>
+                            <li>{{ datosE.numPersonas }}</li>
+                            <li class="carac">Fecha</li>
+                            <li>{{ fechaFormateada }}</li>
+                            <li class="carac">Hora</li>
+                            <li>{{ horaFormateada }} </li>
+                        </ul>
+                    </div>
+                    <v-card-actions class="contButons">
+                        <button @click="showDialog = false" type="button" class="cancelarOrden">Cancelar</button>
+                        <button @click="procesarReserva" type="button" class="confirmarOrden">Confirmar</button>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-card>
     </v-hover>
 </template>
@@ -52,6 +105,7 @@ horaFormateada.value = `${horasFormateadas}:${minutosFormateados}`;
     justify-content: center;
     align-items: center;
     gap: 45px;
+    text-align: center;
 }
 
 
@@ -81,7 +135,9 @@ horaFormateada.value = `${horasFormateadas}:${minutosFormateados}`;
     width: 400px;
     max-height: 14.3125rem;
     padding: 1.25rem .625rem;
+    cursor: pointer;
 }
+
 
 
 .horario {
@@ -89,5 +145,90 @@ horaFormateada.value = `${horasFormateadas}:${minutosFormateados}`;
     color: white;
     padding: 3px;
     display: inline-block;
+}
+
+
+
+.modalReservacion {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: 10px;
+}
+
+.datosMesa {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    grid-column-gap: 40px;
+}
+
+.tituloModal {
+    font-size: 1.5625rem;
+    font-weight: bolder;
+}
+
+.carac {
+    font-weight: 600;
+}
+
+.cancelarOrden {
+    display: flex;
+    flex-flow: row nowrap;
+    overflow: hidden;
+    padding: 7px 8px;
+    align-items: center;
+    gap: 30px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #ffffff;
+    background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+    background-color: #7F1D1D;
+    background-color: #DC2626;
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    box-shadow: 0 15px 13px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.cancelarOrden:hover {
+    background-color: #991B1B;
+    background-color: #991B1B;
+}
+
+.contButons {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: 50px;
+}
+
+.confirmarOrden {
+    display: flex;
+    flex-flow: row nowrap;
+    overflow: hidden;
+    padding: 7px 8px;
+    align-items: center;
+    gap: 30px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: white;
+    background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+    background-color: #e9cb34;
+    background-color: var(--amarillo-dorado);
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    box-shadow: 0 15px 13px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.confirmarOrden:hover {
+    background-color: var(--amarillo-dorado);
+    background-color: #dfbe1b;
+    color: white;
 }
 </style>

@@ -16,9 +16,8 @@
         </button>
 
         <!--Modal del carrito-->
-        <div v-show="modalVisible">
-            <div class="modal-background" @click="cancelarModal"></div>
 
+        <v-dialog v-model="modalVisible">
             <div class="modal-content">
                 <div class="headerModal">
                     <div>
@@ -96,7 +95,8 @@
                         </div>
                     </div>
                     <div class="contentAccion">
-                        <button @click="carrito.limpiarCarrito" type="button" class="cancelarOrden">Cancelar orden</button>
+                        <button @click="carrito.limpiarCarrito" type="button" class="cancelarOrden">Cancelar
+                            orden</button>
                         <button @click="carrito.procesarPedido" type="button" class="confirmarOrden">Confirmar
                             orden</button>
                     </div>
@@ -106,7 +106,7 @@
                     <p> Tu carrito esta vacio</p>
                 </div>
             </div>
-        </div>
+        </v-dialog>
     </div>
 </template>
 
@@ -336,7 +336,7 @@ td {
     gap: 30px;
     border-radius: 8px;
     font-weight: 500;
-    color: rgb(48, 47, 47);
+    color: white;
     background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
     background-color: #e9cb34;
     background-color: var(--amarillo-dorado);
@@ -349,7 +349,7 @@ td {
 .confirmarOrden:hover {
     background-color: var(--amarillo-dorado);
     background-color: #dfbe1b;
-    color: rgb(0, 0, 0);
+    color: white;
 }
 
 /**Para cancelar orden */

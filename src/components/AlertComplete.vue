@@ -1,7 +1,36 @@
-<template>
-    <v-alert type="success" title="Alert title"  closable
-        text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, ratione debitis quis est labore voluptatibus! Eaque cupiditate minima, at placeat totam, magni doloremque veniam neque porro libero rerum unde voluptatem!"></v-alert>
-</template>
 <script setup>
+
+const props = defineProps(['activo','mensaje'])
+
 </script>
-<style scoped></style>
+
+<template>
+    <transition name="slide-fade">
+        <v-alert v-if="props.activo" type="success" closable
+            class="alert" title="Operación exitosa"
+            :text="props.mensaje"></v-alert>
+    </transition>
+</template>
+<style scoped>
+
+.alert{
+    position: fixed;
+    bottom: 40px;
+    right: 0;
+    z-index: 1000;
+    width: 30%;
+    height: 100px;
+}
+
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+    opacity: 0;
+    transform: translateX(20px);
+}
+</style>

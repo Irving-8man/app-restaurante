@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch, reactive } from 'vue';
-import { storeToRefs } from 'pinia'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import CardReservacion from '../components/CardReservacion.vue';
 import personasReserva from '../assets/data/personasReserva.json';
 import { useMesasStore } from '@/stores/mesas';
 import { useReservasStore } from '@/stores/reservas';
+import AlertComplete from '../components/AlertComplete.vue';
+import AlertError from '../components/AlertError.vue';
 
 import dayjs from 'dayjs';
 
@@ -151,41 +152,48 @@ const buscarReservasDia = (fecha) => {
     return mesasDelDia;
 }
 
+const loading = ref(false);
+
+/**
+ * ?Buscar reservacio
+ */
 const buscarMesas = () => {
-
-    const limite  = 0;
-    let reservacion = {
-        "fecha": fechaSeleccionada.value,
-        "ID_mesa": "M_4",
-        "hora": horaSeleccionada.value,
-        "Cliente":"Irving Cupul",
-        "correo":"geyler05@",
-        "numPersonas": numPersonasSeleccionadas.value,
-        "estado":"activo"
-    }
-
+    loading.value = true;
+    const totasDisponibles = 2;
+    const unaDisponible = 1;
 
     //Buscamos la mesas con sus caracteristicas que quiere, que son unidades
     let mesasPedidas = todasLasMesas.filter(mesa => mesa.unidadesPersonas.includes(numPersonasSeleccionadas.value));
     //Buscamos las reservas de ese dia
     let reservasDeEseDia = buscarReservasDia(fechaSeleccionada.value);
 
+
     //obtenemos las mesa en reserva de ese dia si alguna mesa esta ahi ese dia, si esta activo 
     let mesasEnReservas = reservasDeEseDia.filter(mesa =>
-            mesasPedidas.some(reserva => reserva.ID_mesa === mesa.ID_mesa && reserva.estado !== "activo")
+        mesasPedidas.some(reserva => reserva.ID_mesa === mesa.ID_mesa && reserva.estado !== "activo")
+    );
+
+    let mesasDis = mesasPedidas.filter(mesaPedida =>
+        !mesasEnReservas.some(mesaReservada => mesaReservada.ID_mesa === mesaPedida.ID_mesa)
     );
 
 
     //Mostras las mesas que se puedan
-    if(mesasEnReservas.length === limite){
-        let m = Object.values(mesasPedidas);
-        mesasDisponibles.value = m;
+    if (mesasDis.length === totasDisponibles) {
+        mesasDisponibles.value = mesasPedidas;
         buscados.value = true;
-    }else{
-        mesasDisponibles.value = [];
-        buscados.value = false;
+
+    } else {
+        if (mesasDis.length === unaDisponible) {
+            mesasDisponibles.value = mesasDis;
+            buscados.value = true;
+        } else {
+            mesasDisponibles.value = [];
+            buscados.value = false;
+        }
+
     }
-    
+    setTimeout(() => (loading.value = false), 2000)
 }
 
 
@@ -247,7 +255,9 @@ const buscarMesas = () => {
 
             <!---->
             <div>
-                <button type="submit" class="input botonVamos">¡Vamos!</button>
+                <v-btn :loading="loading" block size="large" type="submit" class="input botonVamos" variant="elevated">
+                    ¡Vamos!
+                </v-btn>
             </div>
 
         </form>
@@ -260,8 +270,10 @@ const buscarMesas = () => {
     <section class="section secReservaciones">
         <!--Apartado de las mesas-->
         <div v-show="buscados" class="reservaciones">
-            <template v-for="mesaDisp in mesasDisponibles" :key="mesaDisp.ID_mesa" >
-                <CardReservacion :mesa="mesaDisp" :hora="horaSeleccionada"></CardReservacion>
+            <template v-for="mesaDisp in mesasDisponibles" :key="mesaDisp.ID_mesa">
+                <CardReservacion :mesa="mesaDisp" :hora="horaSeleccionada" :numPersonas="numPersonasSeleccionadas"
+                    :fechaReserva="fechaSeleccionada">
+                </CardReservacion>
             </template>
         </div>
 
@@ -375,6 +387,7 @@ select {
     justify-content: center;
     text-align: center;
     gap: 30px;
+    font-weight: 500;
     border-radius: 8px;
     color: rgb(255, 255, 255);
     background-image: linear-gradient(to bottom, var(--tw-gradient-stops));

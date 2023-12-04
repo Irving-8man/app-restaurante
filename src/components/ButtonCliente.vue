@@ -53,8 +53,9 @@ const cerrarSesion = () =>{
     font-size: 17px;
     align-items: center;
     justify-content: center;
-    padding: 23px ;
-    border-radius: 55%;
+    width: 57px;
+    height: 57px;
+    border-radius: 50%;
     margin:0;
     font-weight: bolder;
     color: #ffffff;
