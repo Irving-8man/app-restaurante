@@ -24,7 +24,7 @@ const cerrarSesion = () =>{
 
 <template>
     <v-menu transition="slide-y-transition">
-        <template v-slot:activator="{ props }">
+        <template v-slot:activator="{ props }" >
             <v-btn v-bind="props" class="buton">
                 AD
             </v-btn>

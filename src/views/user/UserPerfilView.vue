@@ -100,8 +100,8 @@ function guardarCambios() {
   <section class="container">
     <div class="menu-sidebar">
       <div class="circle-container">
-        <div class="circle">{{ nombres.substring(0, 2).toUpperCase() }}</div>
-        <div class="name">{{ nombres }}</div>
+        <div class="circIcon">{{ nombres.substring(0, 2).toUpperCase() }}</div>
+        <div class="titname">{{ nombres }}</div>
       </div>
       <nav class="menu">
         <div class="menu-title">Mi cuenta</div>
@@ -267,22 +267,8 @@ input:focus {
 
 }
 
-.circle {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background-color: var(--amarillo-dorado);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 40px;
-}
 
-.name {
-  margin-top: 10px;
-  font-size: 20px;
-}
+
 
 .menu {
   padding: 20px;

@@ -1,20 +1,21 @@
 <script setup>
 import ButtonTwo from '../components/ButtonTypeTwo.vue';
+import Carrousel from '../components/Carrousel.vue';
 </script>
 
 <template>
   <!---->
   <div class="hero">
-      <div class="ContentHeroTitle">
-        <h2 class="heroTitle">
-          La mejor <strong>comida</strong><br><strong>china</strong> en México
-        </h2>
-        <ButtonTwo enlace="mesas" titulo="Reserva ahora"></ButtonTwo>
-      </div>
+    <div class="ContentHeroTitle">
+      <h2 class="heroTitle">
+        La mejor <strong>comida</strong><br><strong>china</strong> en México
+      </h2>
+      <ButtonTwo enlace="mesas" titulo="Reserva ahora"></ButtonTwo>
+    </div>
 
-      <div class="contentImg">
-        <img src="../assets/img/fideos_hero.png" alt="Fideos chinos" class="imgHero">
-      </div>
+    <div class="contentImg">
+      <img src="../assets/img/fideos_hero.png" alt="Fideos chinos" class="imgHero" loading="lazy">
+    </div>
 
     <div class="aurora">
       <div class="aurora__item"></div>
@@ -148,6 +149,7 @@ import ButtonTwo from '../components/ButtonTypeTwo.vue';
     </div>
     <div class="contentClientes">
       <di class="comentarios">
+        <Carrousel></Carrousel>
       </di>
       <div class="contentImgComentarios">
         <img src="../assets/img/imgClientes.png" alt="Clientes" class="imgClientes">
@@ -155,7 +157,6 @@ import ButtonTwo from '../components/ButtonTypeTwo.vue';
     </div>
 
   </section>
-
 </template>
 
 <style scoped>
@@ -314,7 +315,7 @@ import ButtonTwo from '../components/ButtonTypeTwo.vue';
 
 @keyframes aurora-border {
   0% {
-    border-radius:50%
+    border-radius: 50%
   }
 
   25% {
@@ -336,19 +337,19 @@ import ButtonTwo from '../components/ButtonTypeTwo.vue';
 
 .hero {
   display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    align-content: center;
-    width: 100%;
-    max-width: 100%;
-    border-bottom: 1px solid rgb(196, 192, 192);
-    margin-bottom: 50px;
-    min-height: 90vh;
-    padding: 0 40px;
-    position: relative;
-    overflow: hidden;
-    background-color: white;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-content: center;
+  width: 100%;
+  max-width: 100%;
+  border-bottom: 1px solid rgb(196, 192, 192);
+  margin-bottom: 50px;
+  min-height: 90vh;
+  padding: 0 40px;
+  position: relative;
+  overflow: hidden;
+  background-color: white;
 }
 
 .ContentHeroTitle {
@@ -362,13 +363,13 @@ import ButtonTwo from '../components/ButtonTypeTwo.vue';
   z-index: 100;
 }
 
-.contentImg{
+.contentImg {
   z-index: 100;
 }
 
 .heroTitle {
   font-size: 65px;
-  font-weight:1000;
+  font-weight: 1000;
   text-transform: uppercase;
 }
 
@@ -477,6 +478,10 @@ import ButtonTwo from '../components/ButtonTypeTwo.vue';
 }
 
 .nombrePlatillo {
-  text-wrap: balance;
+  word-wrap: break-word;
+  white-space: normal;
+  line-height: 1.4;
+  font-size: 18px;
+  font-weight: 500;
 }
 </style>

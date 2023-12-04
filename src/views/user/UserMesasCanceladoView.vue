@@ -1,12 +1,18 @@
 <script setup>
-import { ref, onMounted,watchEffect } from 'vue';
+import { ref, onMounted, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import MesaReserva from '@/components/MesaReserva.vue'
 
 const router = useRouter();
 const authStore = useAuthStore();
 const esCliente = ref(false);
 
+const nombres = ref('')
+const email = ref('')
+const telefono = ref(0)
+const contraseniaActual = ref('')
+const id = ref('');
 
 onMounted(() => {
   let perfilCliente = 'cliente';
@@ -15,6 +21,11 @@ onMounted(() => {
   if (userInfo !== null) {
     if (userInfo.perfil === perfilCliente) {
       esCliente.value = true;
+      nombres.value = userInfo.nombres;
+      email.value = userInfo.email;
+      telefono.value = parseInt(userInfo.telefono);
+      contraseniaActual.value = userInfo.contrasenia;
+      id.value = userInfo.id;
     } else {
       router.push({ name: 'home' });
     }
@@ -31,6 +42,11 @@ onMounted(() => {
     if (userInfo !== null) {
       if (userInfo.perfil === perfilCliente) {
         esCliente.value = true;
+        nombres.value = userInfo.nombres;
+        email.value = userInfo.email;
+        telefono.value = parseInt(userInfo.telefono);
+        contraseniaActual.value = userInfo.constrasenia;
+        id.value = userInfo.id;
       } else {
         router.push({ name: 'home' });
       }
@@ -39,22 +55,17 @@ onMounted(() => {
     }
   });
 
-  /**
-   * ?formar composables luego
-   */
-
+/**
+ * ?formar composables luego
+ */
 
 </script>
-
-
-
-
 <template>
   <section class="container">
     <div class="menu-sidebar">
       <div class="circle-container">
-        <div class="circle">IC</div>
-        <div class="name">Irving Geyler Cupul</div>
+        <div class="circIcon">{{ nombres.substring(0, 2).toUpperCase() }}</div>
+        <div class="titname">{{ nombres }}</div>
       </div>
       <div class="menu">
         <div class="menu-title">Mi cuenta</div>
@@ -95,13 +106,10 @@ onMounted(() => {
           </ul>
         </div>
       </div>
-      <div class="rectanguloMesas">
-        <br>
-        <p>Mesa 1</p>
-        <p>Fecha: </p>
-        <p>Hora de entrada:</p>
-        <p>Personas</p><br>
-      </div>
+      <MesaReserva></MesaReserva>
+      <MesaReserva></MesaReserva>
+      <MesaReserva></MesaReserva>
+      <MesaReserva></MesaReserva>
     </div>
   </section>
 </template>

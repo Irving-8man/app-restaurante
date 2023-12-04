@@ -25,6 +25,27 @@ a,
 
 
 
+.circIcon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: var(--amarillo-dorado);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 40px;
+}
+
+.titname {
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+
+
+
+
 .main,
 main {
   color: black;
@@ -105,3 +126,4 @@ section {
 .esylea-black:hover::before,.esylea-red:hover::before{
   width: 100%;
 }
+

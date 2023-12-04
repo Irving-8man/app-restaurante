@@ -146,7 +146,7 @@ onMounted(() => {
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background-color: #F82CD7;
+  background-color: #E86898;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -13,11 +13,10 @@ export const useReservasStore = defineStore("reservas", {
     },
     actions: {
         nuevaReservacion(fecha,reservacion) {
-
             if (!this.reservaciones[fecha]) {
                 this.reservaciones[fecha] = [];
             }
-             this.reservaciones[fecha].push(reservacion);
+            this.reservaciones[fecha].push(reservacion);
         },
 
     },
