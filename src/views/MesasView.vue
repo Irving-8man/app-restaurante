@@ -6,9 +6,12 @@ import { useMesasStore } from '@/stores/mesas';
 import { useReservasStore } from '@/stores/reservas';
 import AlertComplete from '../components/AlertComplete.vue';
 import AlertError from '../components/AlertError.vue';
+import pandaMesasGif from '../assets/img/panda_mesas.gif';
+
 
 import dayjs from 'dayjs';
 
+const panda = pandaMesasGif;
 //? Datos de mesas 
 
 /**
@@ -308,7 +311,7 @@ function recibiendoRespuesta(respuesta) {
                 <p class="mensaje">Panda espera que disfrutes la estancia.</p>
             </div>
             <div>
-                <img src="src/assets/img/panda_mesas.gif" style="background-color: white;" alt="panda">
+                <img :src="panda" style="background-color: white;" alt="panda">
             </div>
         </div>
     </section>
