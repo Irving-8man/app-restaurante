@@ -29,7 +29,7 @@ const cerrarSesion = () =>{
     <v-menu transition="slide-y-transition">
         <template v-slot:activator="{ props }">
             <v-btn v-bind="props" class="buton">
-                {{ data.nombre.toUpperCase()[0] }}
+                {{ data.nombre.substring(0, 2).toUpperCase()}}
             </v-btn>
         </template>
         <v-list>

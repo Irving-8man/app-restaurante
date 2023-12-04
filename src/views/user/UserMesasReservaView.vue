@@ -3,10 +3,16 @@ import { ref, onMounted, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
+
 const router = useRouter();
 const authStore = useAuthStore();
 const esCliente = ref(false);
 
+const nombres = ref('')
+const email = ref('')
+const telefono = ref(0)
+const contraseniaActual = ref('')
+const id = ref('');
 
 onMounted(() => {
   let perfilCliente = 'cliente';
@@ -15,6 +21,11 @@ onMounted(() => {
   if (userInfo !== null) {
     if (userInfo.perfil === perfilCliente) {
       esCliente.value = true;
+      nombres.value = userInfo.nombres;
+      email.value = userInfo.email;
+      telefono.value = parseInt(userInfo.telefono);
+      contraseniaActual.value = userInfo.contrasenia;
+      id.value = userInfo.id;
     } else {
       router.push({ name: 'home' });
     }
@@ -31,6 +42,11 @@ onMounted(() => {
     if (userInfo !== null) {
       if (userInfo.perfil === perfilCliente) {
         esCliente.value = true;
+        nombres.value = userInfo.nombres;
+        email.value = userInfo.email;
+        telefono.value = parseInt(userInfo.telefono);
+        contraseniaActual.value = userInfo.constrasenia;
+        id.value = userInfo.id;
       } else {
         router.push({ name: 'home' });
       }
@@ -38,6 +54,10 @@ onMounted(() => {
       router.push({ name: 'home' });
     }
   });
+
+/**
+ * ?formar composables luego
+ */
 
 /**
  * ?formar composables luego
@@ -213,5 +233,6 @@ li {
 li.active {
   font-weight: bold;
   color: rgb(0, 0, 0);
-}</style>
+}
+</style>
   

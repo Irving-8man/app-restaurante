@@ -2,11 +2,20 @@
 import { ref, onMounted, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import AlertComplete from '@/components/AlertComplete.vue';
+import AlertError from '@/components/AlertError.vue';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const esCliente = ref(false);
 
+const nombres = ref('')
+const email = ref('')
+const telefono = ref(0)
+const contraseniaActual = ref('')
+const id = ref('');
+const contraseniaNuevaUno = ref('');
+const contraseniaNuevaDos = ref('')
 
 onMounted(() => {
   let perfilCliente = 'cliente';
@@ -15,6 +24,11 @@ onMounted(() => {
   if (userInfo !== null) {
     if (userInfo.perfil === perfilCliente) {
       esCliente.value = true;
+      nombres.value = userInfo.nombres;
+      email.value = userInfo.email;
+      telefono.value = parseInt(userInfo.telefono);
+      contraseniaActual.value = userInfo.contrasenia;
+      id.value = userInfo.id;
     } else {
       router.push({ name: 'home' });
     }
@@ -31,6 +45,11 @@ onMounted(() => {
     if (userInfo !== null) {
       if (userInfo.perfil === perfilCliente) {
         esCliente.value = true;
+        nombres.value = userInfo.nombres;
+        email.value = userInfo.email;
+        telefono.value = parseInt(userInfo.telefono);
+        contraseniaActual.value = userInfo.constrasenia;
+        id.value = userInfo.id;
       } else {
         router.push({ name: 'home' });
       }
@@ -43,6 +62,36 @@ onMounted(() => {
  * ?formar composables luego
  */
 
+const form = ref(false);
+const loading = ref(false);
+const visible = ref(false);
+
+
+const contraseniaReglas = ref([
+  (v) => !!v || 'Este campo es requerido',
+  (v) => (v && v.length >= 8) || 'Debe tener al menos 8 caracteres'
+]);
+
+
+const noCoincidencias = ref(null);
+
+
+function guardarCambios() {
+  if (!form.value) return
+  loading.value = true;
+  noCoincidencias.value = null;
+  let coincidencia = contraseniaActual.value === contraseniaNuevaUno.value;
+
+  if (coincidencia) {
+    noCoincidencias.value = true;
+    authStore.actulizarAuth(contraseniaNuevaDos.value);
+  } else {
+    noCoincidencias.value = false;
+  }
+  setTimeout(() => (loading.value = false), 2000)
+}
+
+
 
 </script>
 
@@ -51,10 +100,10 @@ onMounted(() => {
   <section class="container">
     <div class="menu-sidebar">
       <div class="circle-container">
-        <div class="circle">IC</div>
-        <div class="name">Irving Geyler Cupul</div>
+        <div class="circle">{{ nombres.substring(0, 2).toUpperCase() }}</div>
+        <div class="name">{{ nombres }}</div>
       </div>
-      <div class="menu">
+      <nav class="menu">
         <div class="menu-title">Mi cuenta</div>
         <ul>
           <li :class="{ 'active': $route.path === '/user/userperfil' }">
@@ -67,61 +116,50 @@ onMounted(() => {
             <router-link to="/user/userpedidosproceso" style="color: black;">Pedidos</router-link>
           </li>
         </ul>
-      </div>
+      </nav>
     </div>
     <div class="User">
       <div class="rectangulo">
-        <h1>Mi perfil</h1>
+        <h2 class="tituloSec">Mi perfil</h2>
       </div>
       <div class="rectanguloUser">
 
-        <form @submit.prevent="guardarCambios" class="mi-formulario">
-          <br>
+        <v-form v-model="form" @submit.prevent="guardarCambios" class="mi-formulario">
           <label for="nombre" class="salto">Nombre:</label>
-          <input type="text" id="nombre" v-model="nombre" />
-
-          <label for="apellido">Apellido:</label>
-          <input type="text" id="apellido" v-model="apellido" />
+          <v-text-field v-model="nombres" variant="solo" readonly></v-text-field>
 
           <label for="correo">Correo:</label>
-          <input type="email" id="correo" v-model="correo" />
+          <v-text-field v-model="email" variant="solo" readonly></v-text-field>
 
           <label for="telefono">Teléfono:</label>
-          <input type="tel" id="telefono" v-model="telefono" />
+          <v-text-field v-model="telefono" variant="solo" readonly></v-text-field>
 
-          <label for="contrasenaActual">Contraseña Actual:</label>
-          <input type="password" id="contrasenaActual" v-model="contrasenaActual" />
+          <label for="contrasenaActual">Contraseña actual:</label>
+          <v-text-field placeholder="Ingresar contraseña actual" :readonly="loading" v-model="contraseniaNuevaUno"
+            variant="underlined" :rules="contraseniaReglas" class="input"></v-text-field>
 
-          <label for="contrasenaNueva">Contraseña Nueva:</label>
-          <input type="password" id="contrasenaNueva" v-model="contrasenaNueva" />
+          <label for="contrasenaActual">Nueva contraseña:</label>
+          <v-text-field placeholder="Ingresar nueva contraseña" :readonly="loading" v-model="contraseniaNuevaDos"
+            variant="underlined" :rules="contraseniaReglas" class="input"></v-text-field>
 
-          <button type="submit">Guardar Cambios</button>
-        </form>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
+          <v-btn :disabled="!form" :loading="loading" block size="large" type="submit" class="butonRegistro"
+            variant="elevated">
+            Guardar cambios
+          </v-btn>
+        </v-form>
       </div>
     </div>
+    <template v-if="noCoincidencias">
+      <AlertComplete :activo="true" :mensaje="'Contraseña cambiada'"></AlertComplete>
+    </template>
+    <template v-if="noCoincidencias === false">
+      <AlertError :activo="true" :mensaje="'Contraseña incorrecta'"></AlertError>
+    </template>
   </section>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      nombre: 'Irving',
-      apellido: 'Cupul',
-      correo: 'Irving1234@gmail.com',
-      telefono: '9861137404',
-      contrasenaActual: 'Hola123',
-      contrasenaNueva: ''
-    };
-  },
-  methods: {
-    guardarCambios() {
-      // Puedes agregar la lógica para guardar los cambios aquí
-      console.log('Guardando cambios...');
-    }
-  }
-};
-</script>
 
 <style scoped>
 .mi-formulario {
@@ -148,32 +186,41 @@ input:focus {
   box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 
-button {
-  background-color: red;
-  color: white;
-  width: 550px;
-  padding: 10px;
-  /* Agregado para espaciado interno */
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  white-space: nowrap;
-  /* Evita el salto de línea en el texto */
+
+
+.butonRegistro {
+  display: flex;
+  flex-flow: row nowrap;
   overflow: hidden;
-  /* Oculta el contenido que excede el ancho especificado */
-  text-overflow: ellipsis;
-  /* Muestra puntos suspensivos (...) para el contenido que no cabe */
+  padding: 9px 20px;
+  align-items: center;
+  gap: 30px;
+  border-radius: 50px;
+  font-weight: 500;
+  margin-top: 20px;
+  color: rgb(48, 47, 47);
+  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+  background-color: #e9cb34;
+  background-color: var(--amarillo-dorado);
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  box-shadow: 0 15px 13px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-button:hover {
-  background-color: orange;
+.butonRegistro:hover {
+  background-color: var(--amarillo-dorado);
+  background-color: #e9c511;
+  color: rgb(0, 0, 0);
 }
+
 
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: repeat(1, minmax(50px, 1fr));
 }
+
+
 
 .User {
   grid-column: span 2;
@@ -197,6 +244,7 @@ button:hover {
   height: 650px;
   width: 650px;
   margin-left: 30px;
+  padding-top: 30px;
 }
 
 .menu-sidebar {
@@ -205,9 +253,7 @@ button:hover {
   width: 350px;
   background-color: rgb(255, 255, 255);
   justify-content: flex-start;
-  /* Ajuste para posicionar a la izquierda */
   align-items: flex-start;
-  /* Ajuste para posicionar arriba */
   margin-top: 10px;
   color: black;
 }
@@ -225,7 +271,7 @@ button:hover {
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background-color: yellow;
+  background-color: var(--amarillo-dorado);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -265,5 +311,12 @@ li {
 li.active {
   font-weight: bold;
   color: rgb(0, 0, 0);
-}</style>
+}
+
+
+.tituloSec {
+  font-size: 24px;
+  font-weight: bold;
+}
+</style>
 

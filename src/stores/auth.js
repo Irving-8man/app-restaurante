@@ -15,8 +15,8 @@ export const useAuthStore = defineStore("auth", {
     login(datosUser) {
       this.user_info = datosUser;
     },
-    actulizarAuth(user){
-        this.user_info = user;
+    actulizarAuth(contrasenia){
+        this.user_info['contrasenia'] = contrasenia ;
     },
     logout() {
       this.user_info = null;
