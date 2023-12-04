@@ -161,7 +161,7 @@ const buscarMesas = () => {
     loading.value = true;
     const totasDisponibles = 2;
     const unaDisponible = 1;
-
+    completadaReserva.value = null;
     //Buscamos la mesas con sus caracteristicas que quiere, que son unidades
     let mesasPedidas = todasLasMesas.filter(mesa => mesa.unidadesPersonas.includes(numPersonasSeleccionadas.value));
     //Buscamos las reservas de ese dia
@@ -197,6 +197,21 @@ const buscarMesas = () => {
 }
 
 
+/***
+ * Esperando respuesta
+ */
+
+const completadaReserva = ref(null);
+
+function recibiendoRespuesta(respuesta) {
+    completadaReserva.value = respuesta;
+    if (respuesta) {
+        mesasDisponibles.value = [];
+        buscados.value = false;
+    }
+    horaSeleccionada.value = '';
+    numPersonasSeleccionadas.value = '';
+}
 
 
 </script>
@@ -269,10 +284,18 @@ const buscarMesas = () => {
 
     <section class="section secReservaciones">
         <!--Apartado de las mesas-->
+
+        <template v-if="completadaReserva">
+            <AlertComplete :activo="true" :mensaje="'Reservación exitosa'"></AlertComplete>
+        </template>
+        <template v-if="completadaReserva === false">
+            <AlertError :activo="true" :mensaje="'Fallo la reservación'"></AlertError>
+        </template>
+
         <div v-show="buscados" class="reservaciones">
             <template v-for="mesaDisp in mesasDisponibles" :key="mesaDisp.ID_mesa">
                 <CardReservacion :mesa="mesaDisp" :hora="horaSeleccionada" :numPersonas="numPersonasSeleccionadas"
-                    :fechaReserva="fechaSeleccionada">
+                    :fechaReserva="fechaSeleccionada" @reservaHecha="recibiendoRespuesta">
                 </CardReservacion>
             </template>
         </div>

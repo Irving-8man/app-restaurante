@@ -41,7 +41,10 @@ function procesarReserva() {
     }
     
     conseguido = reservasStore.nuevaReservacion(datosE.fechaReserva,reservacion);
-    console.log(conseguido)
+    if(conseguido===1){
+        reservaCompletada.value = true;
+    }
+    emit('reservaHecha', reservaCompletada.value);
     showDialog.value = false;
 }
 
