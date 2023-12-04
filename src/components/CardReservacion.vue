@@ -1,10 +1,13 @@
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, onMounted, watchEffect } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useReservasStore } from '@/stores/reservas'
+import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from 'vue-router';
+
 const datosE = defineProps(['mesa', 'hora', 'numPersonas', 'fechaReserva'])
 const emit = defineEmits(['reservaHecha']);
-import { useAuthStore } from '@/stores/auth';
-import {useReservasStore} from '@/stores/reservas'
-import { v4 as uuidv4 } from 'uuid';
+const router = useRouter();
 
 
 const fechaHora = new Date(datosE.hora);
@@ -31,9 +34,8 @@ const reservasStore = useReservasStore();
 
 function procesarReserva() {
     const userInfo = authStore.getUserInfo;
-    let conseguido = false;
     let reservacion = {
-        "ID_reserva":uuidv4(),
+        "ID_reserva": uuidv4(),
         "Fecha": datosE.fechaReserva,
         "ID_mesa": datosE.mesa.ID_mesa,
         "Hora": datosE.hora,
@@ -41,13 +43,50 @@ function procesarReserva() {
         "NumPersonas": datosE.numPersonas,
         "Estado": "activo"
     }
-    
-    reservasStore.nuevaReservacion(datosE.fechaReserva,reservacion);
+
+    reservasStore.nuevaReservacion(datosE.fechaReserva, reservacion);
     reservaCompletada.value = true;
     emit('reservaHecha', reservaCompletada.value);
     showDialog.value = false;
 }
 
+const esCliente = ref(false);
+//Comporbar si es alguien que ha iniciado sesion
+onMounted(() => {
+    let perfilCliente = 'cliente';
+    const userInfo = authStore.getUserInfo;
+
+    if (userInfo !== null) {
+        if (userInfo.perfil === perfilCliente) {
+            esCliente.value = true;
+        } else {
+            esCliente.value = false;
+        }
+    } else {
+        esCliente.value = false;
+    }
+
+}),
+
+    watchEffect(() => {
+        let perfilCliente = 'cliente';
+        const userInfo = authStore.getUserInfo;
+
+        if (userInfo !== null) {
+            if (userInfo.perfil === perfilCliente) {
+                esCliente.value = true;
+            } else {
+                esCliente.value = false;
+            }
+        } else {
+            esCliente.value = false;
+        }
+    });
+
+function irRegistrar() {
+    showDialog.value = false;
+    router.push({ name: 'login' });
+}
 
 </script>
 <template>
@@ -92,8 +131,15 @@ function procesarReserva() {
                         </ul>
                     </div>
                     <v-card-actions class="contButons">
-                        <button @click="showDialog = false" type="button" class="cancelarOrden">Cancelar</button>
-                        <button @click="procesarReserva" type="button" class="confirmarOrden">Confirmar</button>
+                        <template v-if="esCliente">
+                            <button @click="showDialog = false" type="button" class="cancelarOrden">Cancelar</button>
+                            <button @click="procesarReserva" type="button" class="confirmarOrden">Confirmar</button>
+                        </template>
+                        <template v-if="esCliente === false">
+                            <button @click="showDialog = false" type="button" class="cancelarOrden">Cancelar</button>
+                            <button @click="irRegistrar" type="button" class="confirmarOrden">Accede como
+                                cliente</button>
+                        </template>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -219,7 +265,7 @@ function procesarReserva() {
     gap: 30px;
     border-radius: 8px;
     font-weight: 500;
-    color: white;
+    color: black;
     background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
     background-color: #e9cb34;
     background-color: var(--amarillo-dorado);
@@ -231,7 +277,7 @@ function procesarReserva() {
 
 .confirmarOrden:hover {
     background-color: var(--amarillo-dorado);
-    background-color: #dfbe1b;
-    color: white;
+    background-color: #e9c511;
+    color: black;
 }
 </style>

@@ -1,16 +1,52 @@
 <script setup>
-import { ref ,defineEmits} from 'vue';
+import { ref, defineEmits, onMounted, watchEffect } from 'vue';
 import { useCarritoStore } from '@/stores/carrito';
 import { useAuthStore } from '@/stores/auth';
-const carrito = useCarritoStore();
-const authStore = useAuthStore();
+import { useRouter } from 'vue-router';
 
 const emit = defineEmits(['pedidoCompletado']);
 
+const authStore = useAuthStore();
+const carrito = useCarritoStore();
+const router = useRouter();
+
 const pedidoHecho = ref(false);
 const unidadesNulas = 0;
-
 const modalVisible = ref(false);
+const esCliente = ref(false);
+
+//Comporbar si es alguien que ha iniciado sesion
+onMounted(() => {
+    let perfilCliente = 'cliente';
+    const userInfo = authStore.getUserInfo;
+
+    if (userInfo !== null) {
+        if (userInfo.perfil === perfilCliente) {
+            esCliente.value = true;
+        } else {
+            esCliente.value = false;
+        }
+    } else {
+        esCliente.value = false;
+    }
+
+}),
+
+    watchEffect(() => {
+        let perfilCliente = 'cliente';
+        const userInfo = authStore.getUserInfo;
+
+        if (userInfo !== null) {
+            if (userInfo.perfil === perfilCliente) {
+                esCliente.value = true;
+            } else {
+                esCliente.value = false;
+            }
+        } else {
+            esCliente.value = false;
+        }
+    });
+
 
 
 const mostrarModal = () => {
@@ -22,7 +58,8 @@ const cancelarModal = () => {
 };
 
 //procesamiento del carrito
-function procesarCarrito(){
+function procesarCarrito() {
+
     const userInfo = authStore.getUserInfo;
     carrito.procesarPedido(userInfo.id);
     pedidoHecho.value = true;
@@ -30,6 +67,11 @@ function procesarCarrito(){
     cancelarModal();
 }
 
+
+function irRegistrar(){
+    cancelarModal();
+    router.push({ name: 'login' });
+}
 </script>
 
 <template>
@@ -129,10 +171,15 @@ function procesarCarrito(){
                         </div>
                     </div>
                     <div class="contentAccion">
-                        <button @click="carrito.limpiarCarrito" type="button" class="cancelarOrden">Cancelar
-                            orden</button>
-                        <button @click="procesarCarrito" type="button" class="confirmarOrden">Confirmar
-                            orden</button>
+                        <template v-if="esCliente">
+                            <button @click="carrito.limpiarCarrito" type="button" class="cancelarOrden">Cancelar
+                                orden</button>
+                            <button @click="procesarCarrito" type="button" class="confirmarOrden">Confirmar
+                                orden</button>
+                        </template>
+                        <template v-if="esCliente === false">
+                            <button @click="irRegistrar" type="button" class="confirmarOrden">Accede como cliente</button>
+                        </template>
                     </div>
                 </div>
                 <!--Carrito vacio-->
@@ -190,6 +237,10 @@ function procesarCarrito(){
     z-index: 999;
     cursor: pointer;
 }
+
+/**enlace
+ */
+
 
 .modal-content {
     position: fixed;
@@ -350,7 +401,7 @@ td {
     gap: 30px;
     border-radius: 8px;
     font-weight: 500;
-    color: white;
+    color: black;
     background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
     background-color: #e9cb34;
     background-color: var(--amarillo-dorado);
@@ -362,8 +413,8 @@ td {
 
 .confirmarOrden:hover {
     background-color: var(--amarillo-dorado);
-    background-color: #dfbe1b;
-    color: white;
+    background-color: #e9c511;
+    color: rgb(0, 0, 0);
 }
 
 /**Para cancelar orden */

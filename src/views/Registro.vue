@@ -173,7 +173,7 @@ function onSubmit() {
 
 .butonRegistro:hover {
     background-color: var(--amarillo-dorado);
-    background-color: #dfbe1b;
+    background-color: #e9c511;
     color: rgb(0, 0, 0);
 }
 </style>

@@ -408,13 +408,14 @@ select {
     padding: 9px 20px;
     width: 120px;
     align-items: center;
-    font-weight: bolder;
+    font-weight: bolder !important;
     justify-content: center;
+    border: 2px solid white;
     text-align: center;
     gap: 30px;
-    font-weight: 500;
+    font-weight: bold;
     border-radius: 8px;
-    color: rgb(255, 255, 255);
+    color: black;
     background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
     background-color: #e9cb34;
     background-color: var(--amarillo-dorado);
@@ -427,8 +428,9 @@ select {
 .botonVamos:hover {
     background-color: var(--amarillo-dorado);
     background-color: #e9c511;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
 }
+
 
 
 
